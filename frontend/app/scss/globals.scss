@@ -1,0 +1,7 @@
+@use './normalise.scss';
+@use './variables.scss';
+
+body {
+    background-color: var(--bg-color-main);
+    color: var(--txt-color-main);
+}
