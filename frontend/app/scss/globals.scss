@@ -5,3 +5,18 @@ body {
     background-color: var(--bg-color-main);
     color: var(--txt-color-main);
 }
+
+
+.bg-two {
+    width: 600px;
+    height: 300px;
+    background: var(--bg-color-profile);
+    box-shadow: var(--shadow);
+}
+
+.pencil svg {
+    stroke: var(--txt-color-main);
+    &:hover {
+        stroke: var(--dark-color);
+    }
+}
