@@ -20,7 +20,7 @@ export class User {
 
   @Prop({
     default:
-      'https://www.shutterstock.com/image-illustration/avatar-modern-young-guy-working-260nw-2015853839.jpg',
+      'https://res.cloudinary.com/ddzcjknmj/image/upload/v1729612276/Avatar_uqicfl.png',
     required: true,
   })
   avatar?: string;
