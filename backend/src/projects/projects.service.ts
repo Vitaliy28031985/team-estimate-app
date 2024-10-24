@@ -10,6 +10,7 @@ export class ProjectsService {
   ) {}
 
   async getAll(): Promise<Project[]> {
+    console.log(this.projectModel);
     return await this.projectModel.find().exec();
   }
 }
