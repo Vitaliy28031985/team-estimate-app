@@ -7,7 +7,7 @@ import {
 } from '@elasticemail/elasticemail-client';
 
 const ELASTIC_API_KEY =
-  '70D3F407B0312FC21D7A7B842476CCA5D8120315AAF34D4D76C0A16F92119E8BE43D1A76C5EDAD862CEAD096F7980E97';
+  'hjhjhjh7';
 
 @Injectable()
 export class EmailService {
