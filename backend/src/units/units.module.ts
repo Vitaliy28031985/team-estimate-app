@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UnitsService } from './units.service';
 import { UnitsController } from './units.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Unit, UnitSchema } from 'src/database/models/units.schema';
+import { Unit, UnitSchema } from 'src/mongo/schemas/units.schema';
 
 @Module({
   imports: [

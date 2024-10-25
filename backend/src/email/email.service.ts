@@ -5,9 +5,10 @@ import {
   ContactsApi,
   EmailApi,
 } from '@elasticemail/elasticemail-client';
+import { config } from 'dotenv';
+config();
 
-const ELASTIC_API_KEY =
-  'hjhjhjh7';
+const { ELASTIC_API_KEY } = process.env;
 
 @Injectable()
 export class EmailService {
@@ -33,7 +34,7 @@ export class EmailService {
       `,
     };
 
-    console.log(ELASTIC_API_KEY);
+    console.log(emailData);
 
     try {
       await this.contactsApi.send(emailData);

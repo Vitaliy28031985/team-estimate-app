@@ -12,8 +12,11 @@ config();
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.DB_HOST),
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: ['.env.development', '.env.production'],
+      isGlobal: true,
+    }),
+    MongooseModule.forRoot(process.env.MONGO_DB_HOST),
     AuthModule,
     ProjectsModule,
     UnitsModule,
