@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { User } from 'src/mongo/schemas/user/user.schema';
 // import { user } from 'src/interfaces/user';
-import { User } from 'src/database/models/user/user.schema';
 
 @Controller('auth')
 export class AuthController {
