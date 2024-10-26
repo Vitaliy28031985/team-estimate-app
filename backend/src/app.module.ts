@@ -1,13 +1,14 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { config } from 'dotenv';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ProjectsModule } from './projects/projects.module';
-//import { AuthMiddleware } from './middlewares/auth.middleware';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 import { UnitsModule } from './units/units.module';
 import { PricesModule } from './prices/prices.module';
 import { EmailModule } from './email/email.module';
+import { User, UserSchema } from './mongo/schemas/user/user.schema';
 config();
 
 @Module({
@@ -20,6 +21,7 @@ config();
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGO_DB_HOST),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     AuthModule,
     ProjectsModule,
     UnitsModule,
@@ -28,7 +30,7 @@ config();
   ],
 })
 export class AppModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer.apply(AuthMiddleware).forRoutes('projects');
-  // }
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes('auth/logout');
+  }
 }
