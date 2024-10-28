@@ -16,6 +16,9 @@ import { EmailService } from '../email/email.service';
 import { User } from 'src/mongo/schemas/user/user.schema';
 import { UserGet } from 'src/interfaces/userGet';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
+import { AuthCreateDto } from './auth-dto/auth.create.dto';
+import { AuthLoginDto } from './auth-dto/auth.login.dto';
+import { ErrorsApp } from 'src/common/errors';
 config();
 const { VERIFY_LINK } = process.env;
 
@@ -27,16 +30,14 @@ export class AuthService {
     private readonly emailService: EmailService,
   ) {}
 
-  async register(userDto: User): Promise<User> {
+  async register(userDto: AuthCreateDto): Promise<User> {
     const { email, password } = userDto;
     const normalizedEmail = email.toLowerCase();
     const existingUser = await this.userModel.findOne({
       email: normalizedEmail,
     });
     if (existingUser) {
-      throw new ConflictException(
-        'Email вже використовується іншим користувачем',
-      );
+      throw new ConflictException(ErrorsApp.EXIST_USER);
     }
     const emailVerificationToken = uuidv4();
 
@@ -58,7 +59,7 @@ export class AuthService {
   async verifyEmail(@Param('verificationToken') verificationToken: string) {
     const user = await this.userModel.findOne({ verificationToken });
     if (!user) {
-      throw new ConflictException('Такого юзера не існує!');
+      throw new ConflictException(ErrorsApp.EMPTY_USER);
     }
     return this.userModel.findByIdAndUpdate(user._id, {
       verify: true,
@@ -66,28 +67,21 @@ export class AuthService {
     });
   }
 
-  async login(loginDto: {
-    email: string;
-    password: string;
-  }): Promise<{ token: string }> {
+  async login(loginDto: AuthLoginDto): Promise<{ token: string }> {
     const { email, password } = loginDto;
     const normalizedEmail = email.toLowerCase();
 
     const user = await this.userModel.findOne({ email: normalizedEmail });
     if (!user) {
-      throw new UnauthorizedException(
-        `Користувача з email ${normalizedEmail} не існує!`,
-      );
+      throw new UnauthorizedException(ErrorsApp.EMPTY_USER);
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      throw new UnauthorizedException('Невірний пароль! Спробуйте ще!');
+      throw new UnauthorizedException(ErrorsApp.BAD_PASSWORD);
     }
     if (!user.verify) {
-      throw new ConflictException(
-        `Користувач з email ${normalizedEmail} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`,
-      );
+      throw new ConflictException(ErrorsApp.NOT_VERIFICATION(normalizedEmail));
     }
     const payload = { id: user._id };
     const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
@@ -100,7 +94,7 @@ export class AuthService {
   async logout(@Req() req: RequestWithUser) {
     const user = req.user;
     if (!user || typeof user !== 'object' || !('_id' in user)) {
-      throw new Error('User not found');
+      throw new Error(ErrorsApp.EMPTY_USER);
     }
     const typedUser = user as unknown as UserGet;
 

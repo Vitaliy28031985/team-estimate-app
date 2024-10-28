@@ -12,7 +12,7 @@ export class User {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   phone: string;
 
   @Prop({ minlength: 6, required: true })
@@ -41,12 +41,8 @@ export class User {
   @Prop({ default: false })
   verify: boolean;
 
-  @Prop({ required: [true, 'Verify token is required'] })
+  @Prop({ required: true, default: null })
   verificationToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-//DonjhnQUKlely2Yl - production
-
-//TiWQI40m6gTxawrX - development
