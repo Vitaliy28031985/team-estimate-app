@@ -32,5 +32,7 @@ config();
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('auth/logout');
+    consumer.apply(AuthMiddleware).forRoutes('prices');
+    consumer.apply(AuthMiddleware).forRoutes('projects');
   }
 }
