@@ -1,9 +1,103 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, Param, Req } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import { UserGet } from 'src/interfaces/userGet';
 import { Price } from 'src/mongo/schemas/price.schema';
+import { PricesDto } from './price.dto';
+import { RequestWithUser } from 'src/interfaces/requestWithUser';
+import { ErrorsApp } from 'src/common/errors';
 
 @Injectable()
 export class PricesService {
   constructor(@InjectModel(Price.name) private priceModel: Model<Price>) {}
+
+  async findAll(@Req() req: RequestWithUser): Promise<Price[]> {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    return this.priceModel.find({ owner: typedUser._id });
+  }
+
+  async create(
+    priceDto: PricesDto,
+    @Req() req: RequestWithUser,
+  ): Promise<Price> {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    if (typeof priceDto.price !== 'number') {
+      throw new Error('price isn`t number');
+    }
+
+    const newPrice = this.priceModel.create({ ...priceDto, owner: typedUser });
+    return newPrice;
+  }
+
+  async update(
+    @Param('priceId') priceId: Types.ObjectId,
+    priceDto: PricesDto,
+    @Req() req: RequestWithUser,
+  ): Promise<Price> {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    const pricesList = await this.priceModel.find({
+      owner: typedUser._id,
+    });
+
+    if (pricesList.length === 0) {
+      throw new NotFoundException(ErrorsApp.NOT_PRICE);
+    }
+    const targetPrice = pricesList.some(
+      ({ _id }) => _id.toString() === String(priceId),
+    );
+    if (!targetPrice) {
+      throw new NotFoundException(ErrorsApp.NOT_PRICE);
+    }
+
+    return await this.priceModel.findByIdAndUpdate(
+      { owner: typedUser._id, _id: priceId },
+      priceDto,
+      { new: true, fields: ['-createdAt', '-updatedAt'] },
+    );
+  }
+
+  async remove(
+    @Param('priceId') priceId: Types.ObjectId,
+    @Req() req: RequestWithUser,
+  ): Promise<Price> {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    const pricesList = await this.priceModel.find({
+      owner: typedUser._id,
+    });
+
+    if (pricesList.length === 0) {
+      throw new NotFoundException(ErrorsApp.NOT_PRICE);
+    }
+    const targetPrice = pricesList.some(
+      ({ _id }) => _id.toString() === String(priceId),
+    );
+    if (!targetPrice) {
+      throw new NotFoundException(ErrorsApp.NOT_PRICE);
+    }
+
+    return this.priceModel.findOneAndDelete({
+      owner: typedUser._id,
+      _id: priceId,
+    });
+  }
 }
