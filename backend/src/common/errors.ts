@@ -16,4 +16,16 @@ export const ErrorsApp = {
   NOT_VERIFICATION(emailVer) {
     return `Користувач з email ${emailVer} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`;
   },
+
+  NOT_USER(email) {
+    return `Юзера з email ${email} не існує!`;
+  },
+
+  EMPTY_ALLOW(email) {
+    return `Користувачу з email: ${email} дозвіз не надавався!`;
+  },
+
+  EXISTS_ALLOW(email) {
+    return `Юзеру з email ${email} вже надано доступ до цього кошторису!`;
+  },
 };
