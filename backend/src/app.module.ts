@@ -9,6 +9,7 @@ import { UnitsModule } from './units/units.module';
 import { PricesModule } from './prices/prices.module';
 import { EmailModule } from './email/email.module';
 import { User, UserSchema } from './mongo/schemas/user/user.schema';
+import { SettingProjectModule } from './projects/setting-project/setting.project.module';
 config();
 
 @Module({
@@ -27,6 +28,7 @@ config();
     UnitsModule,
     PricesModule,
     EmailModule,
+    SettingProjectModule,
   ],
 })
 export class AppModule {
@@ -34,5 +36,6 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('auth/logout');
     consumer.apply(AuthMiddleware).forRoutes('prices');
     consumer.apply(AuthMiddleware).forRoutes('projects');
+    consumer.apply(AuthMiddleware).forRoutes('setting/project');
   }
 }
