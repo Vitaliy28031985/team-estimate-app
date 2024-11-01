@@ -8,6 +8,7 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -16,6 +17,9 @@ import { CreateProjectDto } from './projects-dtos/create.project.dto';
 import { Project } from 'src/mongo/schemas/project/project.schema';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { Types } from 'mongoose';
+import { CreateProjectGuard } from './project/create.project.guard.guard';
+import { ProjectGuard } from './project/project.guard';
+import { ProjectDeleteGuard } from './project/project.delete.guard';
 
 @Controller('projects')
 export class ProjectsController {
@@ -30,8 +34,18 @@ export class ProjectsController {
     const limitNum = parseInt(limit) || 5;
     return this.projectsService.getAll(req, pageNum, limitNum);
   }
+  @Get(':projectId')
+  getByIdLow(
+    @Param('projectId') projectId: string,
+    @Req() req: RequestWithUser,
+  ) {
+    const objectId = new Types.ObjectId(projectId);
+    return this.projectsService.getByIdLow(objectId, req);
+  }
+
   @Post()
   @UsePipes(new ValidationPipe())
+  @UseGuards(CreateProjectGuard)
   async create(
     @Body() projectDto: CreateProjectDto,
     @Req() req: RequestWithUser,
@@ -41,6 +55,7 @@ export class ProjectsController {
 
   @Put(':projectId')
   @UsePipes(new ValidationPipe())
+  @UseGuards(ProjectGuard)
   async update(
     @Param('projectId') projectId: string,
     @Body() projectDto: CreateProjectDto,
@@ -51,6 +66,7 @@ export class ProjectsController {
   }
 
   @Delete(':projectId')
+  @UseGuards(ProjectDeleteGuard)
   async remove(
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,

@@ -6,12 +6,14 @@ import {
   Project,
   ProjectSchema,
 } from 'src/mongo/schemas/project/project.schema';
+import { ProjectGuard } from './project/project.guard';
+import { ProjectDeleteGuard } from './project/project.delete.guard';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Project.name, schema: ProjectSchema }]),
   ],
   controllers: [ProjectsController],
-  providers: [ProjectsService],
+  providers: [ProjectsService, ProjectGuard, ProjectDeleteGuard],
 })
 export class ProjectsModule {}
