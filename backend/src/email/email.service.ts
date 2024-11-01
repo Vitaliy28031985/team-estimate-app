@@ -9,7 +9,7 @@ export class EmailService {
     try {
       await this.mailerService.sendMail({
         to: email,
-        subject: '<h1>Підтвердження реєстрації</h1>',
+        subject: 'Підтвердження реєстрації',
         html: `<div><p>Будь ласка, натисніть на посилання нижче для підтвердження вашої електронної пошти:</p><a href="${verificationLink}">Підтвердити електронну пошту</a></div>`,
       });
       console.log('Email sent successfully');

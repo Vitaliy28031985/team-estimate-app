@@ -1,18 +1,14 @@
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 
 export interface UserGet {
-  _id: ObjectId;
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-  avatar: string;
-  role: 'customer' | 'admin';
-  numberProjects: number;
-  allowToken: string | null;
-  token: string;
-  projectIds: ObjectId[];
-  price: number[];
-  createdAt: Date;
-  updatedAt: Date;
+  _id: Types.ObjectId;
+  role: string;
+  projectIds: Array<{
+    id: string;
+    userId: string;
+    allowLevel: string;
+    lookAt: string;
+    lookAtTotals: string;
+    _id: Types.ObjectId;
+  }>;
 }
