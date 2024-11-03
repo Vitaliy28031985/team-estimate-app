@@ -67,6 +67,35 @@ export class AuthService {
     });
   }
 
+  async validateOAuthLogin(
+    googleId: string,
+    email: string,
+    displayName: string,
+  ): Promise<User> {
+    let user = await this.userModel.findOne({ googleId });
+
+    if (!user) {
+      user = await this.userModel.create({
+        googleId,
+        email,
+        name: displayName,
+        verify: true,
+      });
+    }
+
+    const payload = { id: user._id };
+    const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
+
+    return { ...user.toObject(), token };
+  }
+
+  loginWithGoogle(user: User) {
+    // console.log(user);
+    if (!user) {
+      throw new Error('Method not implemented.');
+    }
+  }
+
   async login(loginDto: AuthLoginDto): Promise<{ token: string }> {
     const { email, password } = loginDto;
     const normalizedEmail = email.toLowerCase();
