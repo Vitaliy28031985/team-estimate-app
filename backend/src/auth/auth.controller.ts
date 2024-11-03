@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Req,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { User } from 'src/mongo/schemas/user/user.schema';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { AuthCreateDto } from './auth-dto/auth.create.dto';
 import { AuthLoginDto } from './auth-dto/auth.login.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +35,18 @@ export class AuthController {
     return await this.authService.verifyEmail(verificationToken);
   }
 
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth() {}
+
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req: any) {
+    if (!req) return;
+    console.log(req);
+    return this.authService.loginWithGoogle(req.user);
+  }
+
   @Post('login')
   @UsePipes(new ValidationPipe())
   async login(@Body() loginDto: AuthLoginDto): Promise<{ token: string }> {
@@ -44,3 +58,8 @@ export class AuthController {
     return this.authService.logout(req);
   }
 }
+// function AuthGuard(
+//   arg0: string,
+// ): Function | import('@nestjs/common').CanActivate {
+//   throw new Error('Function not implemented.');
+// }

@@ -9,13 +9,16 @@ export class User {
   @Prop({ required: true })
   name: string;
 
+  @Prop({ unique: true })
+  googleId: string;
+
   @Prop({ required: true, unique: true })
   email: string;
 
   @Prop({ required: false })
   phone: string;
 
-  @Prop({ minlength: 6, required: true })
+  @Prop({ minlength: 6, required: false })
   password: string;
 
   @Prop({
@@ -41,7 +44,7 @@ export class User {
   @Prop({ default: false })
   verify: boolean;
 
-  @Prop({ required: true, default: null })
+  @Prop({ required: false, default: null })
   verificationToken: string;
 }
 

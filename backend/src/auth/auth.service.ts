@@ -67,6 +67,49 @@ export class AuthService {
     });
   }
 
+  async validateOAuthLogin(
+    googleId: string,
+    email: string,
+    displayName: string,
+    photos: string,
+  ): Promise<User> {
+    let user = await this.userModel.findOne({ googleId });
+
+    if (!user) {
+      user = await this.userModel.create({
+        googleId,
+        email,
+        name: displayName,
+        avatar: photos,
+        verify: true,
+      });
+    }
+
+    const payload = { id: user._id };
+    const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
+
+    return { ...user.toObject(), token };
+  }
+
+  async loginWithGoogle(user: any) {
+    if (!user) {
+      throw new Error('Користувача не знайдено');
+    }
+    const payload = { id: user._id };
+    const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
+
+    await this.userModel.findByIdAndUpdate(user._id, { $set: { token } });
+
+    return {
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+      },
+      token,
+    };
+  }
+
   async login(loginDto: AuthLoginDto): Promise<{ token: string }> {
     const { email, password } = loginDto;
     const normalizedEmail = email.toLowerCase();
