@@ -21,6 +21,6 @@ export class Position {
   price: number;
 
   @Prop({ required: true })
-  sum: number;
+  result: number;
 }
 export const PositionSchema = SchemaFactory.createForClass(Position);

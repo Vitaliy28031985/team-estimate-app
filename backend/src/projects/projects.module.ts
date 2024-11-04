@@ -8,12 +8,10 @@ import {
 } from 'src/mongo/schemas/project/project.schema';
 import { ProjectGuard } from './project/project.guard';
 import { ProjectDeleteGuard } from './project/project.delete.guard';
-import { PositionsModule } from './positions/positions.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Project.name, schema: ProjectSchema }]),
-    PositionsModule,
   ],
   controllers: [ProjectsController],
   providers: [ProjectsService, ProjectGuard, ProjectDeleteGuard],
