@@ -1,0 +1,72 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { PositionsService } from './positions.service';
+import { ProjectGuard } from '../project/project.guard';
+import { CreatePositionDto } from './position-dto/position.create.dto';
+import { Types } from 'mongoose';
+
+@Controller('positions')
+export class PositionsController {
+  constructor(private readonly positionsService: PositionsService) {}
+
+  @Post('/:projectId/:estimateId')
+  @UsePipes(new ValidationPipe())
+  @UseGuards(ProjectGuard)
+  async create(
+    @Body() dto: CreatePositionDto,
+    @Param('projectId') projectId: string,
+    @Param('estimateId') estimateId: string,
+  ) {
+    const objectProjectId = new Types.ObjectId(projectId);
+    const objectEstimatedId = new Types.ObjectId(estimateId);
+    return await this.positionsService.createPosition(
+      dto,
+      objectProjectId,
+      objectEstimatedId,
+    );
+  }
+
+  @Patch(':projectId/:estimateId/:positionId')
+  @UsePipes(new ValidationPipe())
+  @UseGuards(ProjectGuard)
+  async update(
+    @Body() dto: CreatePositionDto,
+    @Param('projectId') projectId: string,
+    @Param('estimateId') estimateId: string,
+    @Param('positionId') positionId: string,
+  ) {
+    const objectProjectId = new Types.ObjectId(projectId);
+    const objectEstimatedId = new Types.ObjectId(estimateId);
+    await this.positionsService.updatePosition(
+      dto,
+      objectProjectId,
+      objectEstimatedId,
+      positionId,
+    );
+  }
+
+  @Delete(':projectId/:estimateId/:positionId')
+  @UseGuards(ProjectGuard)
+  async remove(
+    @Param('projectId') projectId: string,
+    @Param('estimateId') estimateId: string,
+    @Param('positionId') positionId: string,
+  ) {
+    const objectProjectId = new Types.ObjectId(projectId);
+    const objectEstimatedId = new Types.ObjectId(estimateId);
+    return await this.positionsService.removePosition(
+      objectProjectId,
+      objectEstimatedId,
+      positionId,
+    );
+  }
+}

@@ -10,6 +10,8 @@ import { PricesModule } from './prices/prices.module';
 import { EmailModule } from './email/email.module';
 import { User, UserSchema } from './mongo/schemas/user/user.schema';
 import { SettingProjectModule } from './projects/setting-project/setting.project.module';
+import { EstimatesModule } from './projects/estimates/estimates.module';
+import { PositionsModule } from './projects/positions/positions.module';
 config();
 
 @Module({
@@ -29,6 +31,8 @@ config();
     PricesModule,
     EmailModule,
     SettingProjectModule,
+    EstimatesModule,
+    PositionsModule,
   ],
 })
 export class AppModule {
@@ -37,5 +41,7 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('prices');
     consumer.apply(AuthMiddleware).forRoutes('projects');
     consumer.apply(AuthMiddleware).forRoutes('setting/project');
+    consumer.apply(AuthMiddleware).forRoutes('estimates');
+    consumer.apply(AuthMiddleware).forRoutes('positions');
   }
 }
