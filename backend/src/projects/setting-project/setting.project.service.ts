@@ -16,6 +16,8 @@ import { UserGet } from 'src/interfaces/userGet';
 import { MessageApp } from 'src/common/message';
 import { DeleteAllowDto } from './dto/delete.dto';
 import { PositionsService } from '../positions/positions.service';
+import { EstimateInterface } from 'src/interfaces/estimate';
+import { Helpers } from '../positions/helpers';
 
 @Injectable()
 export class SettingProjectService {
@@ -269,5 +271,82 @@ export class SettingProjectService {
     );
 
     await this.positionsService.getResults(projectId);
+  }
+
+  async addLowEstimates(
+    dto: { discount: number },
+    @Param('projectId') projectId: Types.ObjectId,
+  ) {
+    const project = await this.projectModel.findById(
+      projectId,
+      '-createdAt -updatedAt',
+    );
+    if (!project) {
+      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
+    }
+
+    if (typeof dto.discount !== 'number' || !dto.discount) {
+      throw new NotFoundException(ErrorsApp.NOT_DISCOUNT);
+    }
+
+    const discountConvert =
+      dto.discount >= 1 ? dto.discount / 100 : dto.discount;
+
+    const estimateList: EstimateInterface[] = project.estimates;
+
+    for (let i = 0; i < estimateList.length; i++) {
+      const positionsList = estimateList[i].positions;
+      for (let i = 0; i < positionsList.length; i++) {
+        const currentDiscount = positionsList[i].price * discountConvert;
+        const newResult = Helpers.multiplication(
+          positionsList[i].number,
+          positionsList[i].price - currentDiscount,
+        );
+        positionsList[i].price = positionsList[i].price - currentDiscount;
+        positionsList[i].result = newResult;
+      }
+      const newTotalEstimates = Helpers.sumData(estimateList[i]);
+      estimateList[i].total = newTotalEstimates;
+    }
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { lowEstimates: estimateList } },
+      { new: true },
+    );
+
+    await this.getTotal(projectId);
+    await this.getResults(projectId);
+    return;
+  }
+
+  async getTotal(projectId: Types.ObjectId) {
+    const projectListForTotal = await this.projectModel.findById(
+      projectId,
+      '-createdAt -updatedAt',
+    );
+    const projectTotal = Helpers.sumLowEstimates(projectListForTotal);
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { lowTotal: projectTotal } },
+      { new: true },
+    );
+    return;
+  }
+
+  async getResults(projectId: Types.ObjectId) {
+    const updateListLowGeneral = await this.projectModel.findById(
+      projectId,
+      '-createdAt -updatedAt',
+    );
+    const getLowGeneral =
+      updateListLowGeneral.lowTotal +
+      updateListLowGeneral.materialsTotal -
+      updateListLowGeneral.advancesTotal;
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { lowGeneral: getLowGeneral } },
+      { new: true },
+    );
+    return;
   }
 }
