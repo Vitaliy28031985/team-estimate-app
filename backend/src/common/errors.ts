@@ -13,6 +13,7 @@ export const ErrorsApp = {
   NOT_PRICE: 'Таккї позиції прайсу не існує!',
   NOT_PROJECT: 'Такого кошторису не існує!',
   NOT_ESTIMATE: 'Такої таблиці не існує!',
+  NOT_DISCOUNT: 'discount має бути числом!',
 
   NOT_VERIFICATION(emailVer) {
     return `Користувач з email ${emailVer} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`;

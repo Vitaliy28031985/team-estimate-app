@@ -28,4 +28,10 @@ export const Helpers = {
     }, 0);
     return sum;
   },
+  sumLowEstimates(array: any): number {
+    const sum = array.lowEstimates.reduce((prevPosition, position) => {
+      return prevPosition + position.total;
+    }, 0);
+    return sum;
+  },
 };

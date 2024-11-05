@@ -1,9 +1,18 @@
-import { Body, Controller, Param, Patch, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { SettingProjectService } from './setting.project.service';
 import { AddAllowDto } from './dto/add.allow.dto';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { Types } from 'mongoose';
 import { DeleteAllowDto } from './dto/delete.dto';
+import { ProjectGuard } from '../project/project.guard';
 
 @Controller('setting/project')
 export class SettingProjectController {
@@ -48,5 +57,24 @@ export class SettingProjectController {
       objectId,
       req,
     );
+  }
+  @Post('/discount/:projectId')
+  @UseGuards(ProjectGuard)
+  async addDiscount(
+    @Body() dto: { discount: number },
+    @Param('projectId') projectId: string,
+  ) {
+    const objectId = new Types.ObjectId(projectId);
+    return await this.settingProjectService.addDiscount(dto, objectId);
+  }
+
+  @Post('/lowEstimates/:projectId')
+  @UseGuards(ProjectGuard)
+  async addLowEstimates(
+    @Body() dto: { discount: number },
+    @Param('projectId') projectId: string,
+  ) {
+    const objectId = new Types.ObjectId(projectId);
+    return await this.settingProjectService.addLowEstimates(dto, objectId);
   }
 }
