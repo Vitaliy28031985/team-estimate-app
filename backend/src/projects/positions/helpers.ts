@@ -22,4 +22,10 @@ export const Helpers = {
     const result = a + b - c - d;
     return result;
   },
+  sumMaterials(array: any): number {
+    const sum = array.reduce((prevMaterial, material) => {
+      return prevMaterial + material.sum;
+    }, 0);
+    return sum;
+  },
 };
