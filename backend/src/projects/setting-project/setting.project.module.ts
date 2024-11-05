@@ -7,6 +7,7 @@ import {
   ProjectSchema,
 } from 'src/mongo/schemas/project/project.schema';
 import { User, UserSchema } from 'src/mongo/schemas/user/user.schema';
+import { PositionsService } from '../positions/positions.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { User, UserSchema } from 'src/mongo/schemas/user/user.schema';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [SettingProjectController],
-  providers: [SettingProjectService],
+  providers: [SettingProjectService, PositionsService],
 })
 export class SettingProjectModule {}

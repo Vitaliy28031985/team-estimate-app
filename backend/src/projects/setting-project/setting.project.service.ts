@@ -15,12 +15,14 @@ import { ErrorsApp } from 'src/common/errors';
 import { UserGet } from 'src/interfaces/userGet';
 import { MessageApp } from 'src/common/message';
 import { DeleteAllowDto } from './dto/delete.dto';
+import { PositionsService } from '../positions/positions.service';
 
 @Injectable()
 export class SettingProjectService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     @InjectModel(User.name) private userModel: Model<User>,
+    private readonly positionsService: PositionsService,
   ) {}
 
   async addAllowProject(
@@ -233,5 +235,39 @@ export class SettingProjectService {
       projectId,
       userId: userId.toString(),
     };
+  }
+
+  async addDiscount(
+    dto: { discount: number },
+    @Param('projectId') projectId: Types.ObjectId,
+  ) {
+    const project = await this.projectModel.findById(
+      projectId,
+      '-createdAt -updatedAt',
+    );
+    if (!project) {
+      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
+    }
+
+    if (typeof dto.discount !== 'number' || !dto.discount) {
+      throw new NotFoundException(ErrorsApp.NOT_DISCOUNT);
+    }
+
+    const discountConvert =
+      dto.discount >= 1 ? dto.discount / 100 : dto.discount;
+
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { discountPercentage: discountConvert } },
+      { new: true },
+    );
+
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { discount: project.total * discountConvert } },
+      { new: true },
+    );
+
+    await this.positionsService.getResults(projectId);
   }
 }
