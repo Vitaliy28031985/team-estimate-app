@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Patch,
   Post,
@@ -38,6 +39,20 @@ export class EstimatesController {
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.estimatesService.updateEstimated(
       dto,
+      objectProjectId,
+      objectEstimatedId,
+    );
+  }
+  @Delete('/:projectId/:estimateId')
+  @UsePipes(new ValidationPipe())
+  @UseGuards(ProjectGuard)
+  async remove(
+    @Param('projectId') projectId: string,
+    @Param('estimateId') estimateId: string,
+  ) {
+    const objectProjectId = new Types.ObjectId(projectId);
+    const objectEstimatedId = new Types.ObjectId(estimateId);
+    return await this.estimatesService.removeEstimate(
       objectProjectId,
       objectEstimatedId,
     );
