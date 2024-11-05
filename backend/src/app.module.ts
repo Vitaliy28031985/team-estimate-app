@@ -13,6 +13,7 @@ import { SettingProjectModule } from './projects/setting-project/setting.project
 import { EstimatesModule } from './projects/estimates/estimates.module';
 import { PositionsModule } from './projects/positions/positions.module';
 import { MaterialsModule } from './projects/materials/materials.module';
+import { AdvancesModule } from './projects/advances/advances.module';
 config();
 
 @Module({
@@ -35,6 +36,7 @@ config();
     EstimatesModule,
     PositionsModule,
     MaterialsModule,
+    AdvancesModule,
   ],
 })
 export class AppModule {
@@ -46,5 +48,6 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('estimates');
     consumer.apply(AuthMiddleware).forRoutes('positions');
     consumer.apply(AuthMiddleware).forRoutes('materials');
+    consumer.apply(AuthMiddleware).forRoutes('advances');
   }
 }
