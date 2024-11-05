@@ -12,6 +12,8 @@ import { User, UserSchema } from './mongo/schemas/user/user.schema';
 import { SettingProjectModule } from './projects/setting-project/setting.project.module';
 import { EstimatesModule } from './projects/estimates/estimates.module';
 import { PositionsModule } from './projects/positions/positions.module';
+import { MaterialsModule } from './projects/materials/materials.module';
+import { AdvancesModule } from './projects/advances/advances.module';
 config();
 
 @Module({
@@ -33,6 +35,8 @@ config();
     SettingProjectModule,
     EstimatesModule,
     PositionsModule,
+    MaterialsModule,
+    AdvancesModule,
   ],
 })
 export class AppModule {
@@ -43,5 +47,7 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('setting/project');
     consumer.apply(AuthMiddleware).forRoutes('estimates');
     consumer.apply(AuthMiddleware).forRoutes('positions');
+    consumer.apply(AuthMiddleware).forRoutes('materials');
+    consumer.apply(AuthMiddleware).forRoutes('advances');
   }
 }

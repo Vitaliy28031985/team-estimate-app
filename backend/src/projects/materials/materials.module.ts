@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { EstimatesService } from './estimates.service';
-import { EstimatesController } from './estimates.controller';
+import { MaterialsService } from './materials.service';
+import { MaterialsController } from './materials.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   Project,
@@ -12,7 +12,7 @@ import { PositionsService } from '../positions/positions.service';
   imports: [
     MongooseModule.forFeature([{ name: Project.name, schema: ProjectSchema }]),
   ],
-  controllers: [EstimatesController],
-  providers: [EstimatesService, PositionsService],
+  controllers: [MaterialsController],
+  providers: [MaterialsService, PositionsService],
 })
-export class EstimatesModule {}
+export class MaterialsModule {}

@@ -13,5 +13,6 @@ import {
   ],
   controllers: [PositionsController],
   providers: [PositionsService],
+  exports: [PositionsService],
 })
 export class PositionsModule {}

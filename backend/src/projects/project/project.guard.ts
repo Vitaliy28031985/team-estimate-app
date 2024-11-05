@@ -43,15 +43,15 @@ export class ProjectGuard implements CanActivate {
     const isEmptyProjectId = userProjectsArray.some(
       ({ id }) => id === projectId,
     );
+    if (!isEmptyProjectId) {
+      return false;
+    }
     const currentProjectId = userProjectsArray.filter(
       ({ id }) => id === projectId,
     );
 
-    if (isEmptyProjectId) {
-      if (currentProjectId[0].allowLevel === 'read') {
-        return false;
-      }
-      return true;
+    if (currentProjectId[0].allowLevel === 'read') {
+      return false;
     }
 
     return false;
