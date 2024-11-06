@@ -20,7 +20,7 @@ import { AuthCreateDto } from './auth-dto/auth.create.dto';
 import { AuthLoginDto } from './auth-dto/auth.login.dto';
 import { ErrorsApp } from 'src/common/errors';
 config();
-const { VERIFY_LINK } = process.env;
+const { VERIFY_EMAIL_LINK } = process.env;
 
 @Injectable()
 export class AuthService {
@@ -48,7 +48,7 @@ export class AuthService {
       password: hashedPassword,
       verificationToken: emailVerificationToken,
     });
-    const verificationLink = `${VERIFY_LINK}${emailVerificationToken}`;
+    const verificationLink = `${VERIFY_EMAIL_LINK}${emailVerificationToken}`;
     await this.emailService.sendConfirmationEmail(
       normalizedEmail,
       verificationLink,
