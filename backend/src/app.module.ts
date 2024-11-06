@@ -14,6 +14,7 @@ import { EstimatesModule } from './projects/estimates/estimates.module';
 import { PositionsModule } from './projects/positions/positions.module';
 import { MaterialsModule } from './projects/materials/materials.module';
 import { AdvancesModule } from './projects/advances/advances.module';
+import { ProjectPricesModule } from './projects/project-prices/project.prices.module';
 config();
 
 @Module({
@@ -37,6 +38,7 @@ config();
     PositionsModule,
     MaterialsModule,
     AdvancesModule,
+    ProjectPricesModule,
   ],
 })
 export class AppModule {
@@ -49,5 +51,6 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('positions');
     consumer.apply(AuthMiddleware).forRoutes('materials');
     consumer.apply(AuthMiddleware).forRoutes('advances');
+    consumer.apply(AuthMiddleware).forRoutes('project/prices');
   }
 }
