@@ -35,9 +35,12 @@ export class ProjectsController {
     return this.projectsService.getAll(req, pageNum, limitNum);
   }
   @Get(':projectId')
-  getByIdLow(@Param('projectId') projectId: string) {
+  async getById(
+    @Param('projectId') projectId: string,
+    @Req() req: RequestWithUser,
+  ) {
     const objectId = new Types.ObjectId(projectId);
-    return this.projectsService.getByIdLow(objectId);
+    return await this.projectsService.getById(objectId, req);
   }
 
   @Post()
