@@ -15,19 +15,19 @@ export const ErrorsApp = {
   NOT_ESTIMATE: 'Такої таблиці не існує!',
   NOT_DISCOUNT: 'discount має бути числом!',
 
-  NOT_VERIFICATION(emailVer) {
+  NOT_VERIFICATION(emailVer: string): string {
     return `Користувач з email ${emailVer} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`;
   },
 
-  NOT_USER(email) {
+  NOT_USER(email: string): string {
     return `Юзера з email ${email} не існує!`;
   },
 
-  EMPTY_ALLOW(email) {
+  EMPTY_ALLOW(email: string): string {
     return `Користувачу з email: ${email} дозвіз не надавався!`;
   },
 
-  EXISTS_ALLOW(email) {
+  EXISTS_ALLOW(email: string): string {
     return `Юзеру з email ${email} вже надано доступ до цього кошторису!`;
   },
 };
