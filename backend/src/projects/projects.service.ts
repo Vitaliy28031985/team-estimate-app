@@ -8,11 +8,13 @@ import { ErrorsApp } from 'src/common/errors';
 import { UserGet } from 'src/interfaces/userGet';
 import { ProjectResponse } from 'src/interfaces/project.response';
 import { LowProjectData } from 'src/interfaces/lowData';
+import { Price } from 'src/mongo/schemas/price.schema';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
+    @InjectModel(Price.name) private priceModel: Model<Price>,
   ) {}
 
   async getAll(
@@ -82,8 +84,10 @@ export class ProjectsService {
       throw new Error(ErrorsApp.EMPTY_USER);
     }
     const typedUser = user as unknown as UserGet;
+    const prices = await this.priceModel.find({ owner: typedUser._id });
     const newProject = this.projectModel.create({
       ...projectDto,
+      prices,
       owner: typedUser,
     });
     return newProject;
