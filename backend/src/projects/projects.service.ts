@@ -4,11 +4,11 @@ import { Model, Types } from 'mongoose';
 import { Project } from 'src/mongo/schemas/project/project.schema';
 import { CreateProjectDto } from './projects-dtos/create.project.dto';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
-import { ErrorsApp } from 'src/common/errors';
 import { UserGet } from 'src/interfaces/userGet';
 import { ProjectResponse } from 'src/interfaces/project.response';
-import { LowProjectData } from 'src/interfaces/lowData';
 import { Price } from 'src/mongo/schemas/price.schema';
+import { ErrorsApp } from 'src/common/errors';
+import { AlowUserList } from 'src/interfaces/alow.user.list';
 
 @Injectable()
 export class ProjectsService {
@@ -50,11 +50,16 @@ export class ProjectsService {
 
     return { projects, total };
   }
-
-  async getByIdLow(
+  async getById(
     @Param('projectId') projectId: Types.ObjectId,
-    // @Req() req: RequestWithUser,
-  ): Promise<LowProjectData> {
+    @Req() req: RequestWithUser,
+  ) {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
+
     const project = await this.projectModel.findById(
       projectId,
       '-createdAt -updatedAt',
@@ -62,17 +67,130 @@ export class ProjectsService {
     if (!project) {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
-    const lowData: LowProjectData = {
-      _id: project._id,
-      title: project.title,
-      description: project.description,
-      prices: project.prices,
-      materialsTotal: project.materialsTotal,
-      advancesTotal: project.advancesTotal,
-      materials: project.materials,
-      advances: project.advances,
-    };
-    return lowData;
+
+    if (
+      project.owner.toString() === typedUser._id.toString() ||
+      typedUser.role === 'admin'
+    ) {
+      return await this.projectModel.findById(
+        projectId,
+        '-createdAt -updatedAt',
+      );
+    }
+    const userProjectsArray: AlowUserList[] = typedUser.projectIds;
+
+    const isEmptyProjectId = userProjectsArray.some(
+      ({ id }) => id === projectId.toString(),
+    );
+
+    if (isEmptyProjectId) {
+      const currentProjectId: AlowUserList[] = userProjectsArray.filter(
+        ({ id }) => id === projectId.toString(),
+      );
+
+      if (
+        currentProjectId[0].lookAt === 'small' &&
+        currentProjectId[0].lookAtTotals === 'show'
+      ) {
+        return await {
+          _id: project._id,
+          title: project.title,
+          description: project.description,
+          materialsTotal: project.materialsTotal,
+          advancesTotal: project.advancesTotal,
+          materials: project.materials,
+          advances: project.advances,
+          lowEstimates: project.lowEstimates,
+          lowTotal: project.lowTotal,
+          lowGeneral: project.lowGeneral,
+        };
+      }
+      if (
+        currentProjectId[0].lookAt === 'small' &&
+        currentProjectId[0].lookAtTotals === 'notShow'
+      ) {
+        return await {
+          _id: project._id,
+          title: project.title,
+          description: project.description,
+          lowEstimates: project.lowEstimates,
+          lowTotal: project.lowTotal,
+        };
+      }
+
+      if (
+        currentProjectId[0].lookAt === 'large' &&
+        currentProjectId[0].lookAtTotals === 'show'
+      ) {
+        return await {
+          _id: project._id,
+          title: project.title,
+          description: project.description,
+          materials: project.materials,
+          advances: project.advances,
+          prices: project.prices,
+          estimates: project.estimates,
+          total: project.total,
+          materialsTotal: project.materialsTotal,
+          advancesTotal: project.advancesTotal,
+          general: project.general,
+          discountPercentage: project.discountPercentage,
+        };
+      }
+
+      if (
+        currentProjectId[0].lookAt === 'large' &&
+        currentProjectId[0].lookAtTotals === 'notShow'
+      ) {
+        return await {
+          _id: project._id,
+          title: project.title,
+          description: project.description,
+          prices: project.prices,
+          estimates: project.estimates,
+          total: project.total,
+        };
+      }
+
+      if (
+        currentProjectId[0].lookAt === 'all' &&
+        currentProjectId[0].lookAtTotals === 'show'
+      ) {
+        return await {
+          _id: project._id,
+          title: project.title,
+          description: project.description,
+          materials: project.materials,
+          advances: project.advances,
+          prices: project.prices,
+          estimates: project.estimates,
+          lowEstimates: project.lowEstimates,
+          lowTotal: project.lowTotal,
+          lowGeneral: project.lowGeneral,
+          total: project.total,
+          materialsTotal: project.materialsTotal,
+          advancesTotal: project.advancesTotal,
+          general: project.general,
+          discountPercentage: project.discountPercentage,
+        };
+      }
+
+      if (
+        currentProjectId[0].lookAt === 'all' &&
+        currentProjectId[0].lookAtTotals === 'notShow'
+      ) {
+        return await {
+          _id: project._id,
+          title: project.title,
+          description: project.description,
+          prices: project.prices,
+          estimates: project.estimates,
+          lowEstimates: project.lowEstimates,
+          lowTotal: project.lowTotal,
+          total: project.total,
+        };
+      }
+    }
   }
 
   async create(
