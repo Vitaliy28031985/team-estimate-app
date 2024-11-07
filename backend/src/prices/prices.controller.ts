@@ -16,21 +16,21 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { PricesDto } from './price.dto';
 import { Price } from 'src/mongo/schemas/price.schema';
 import { Types } from 'mongoose';
-import { PriceGuard } from './price.guard';
+import { RoleGuard } from 'src/guards/roleGuard';
 
 @Controller('prices')
 export class PricesController {
   constructor(private readonly pricesService: PricesService) {}
 
   @Get()
-  @UseGuards(PriceGuard)
+  @UseGuards(RoleGuard)
   async getAll(@Req() req: RequestWithUser) {
     return this.pricesService.findAll(req);
   }
 
   @Post()
   @UsePipes(new ValidationPipe())
-  @UseGuards(PriceGuard)
+  @UseGuards(RoleGuard)
   async create(
     @Body() priceDto: PricesDto,
     @Req() req: RequestWithUser,
@@ -40,7 +40,7 @@ export class PricesController {
 
   @Put(':priceId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(PriceGuard)
+  @UseGuards(RoleGuard)
   async update(
     @Param('priceId') priceId: string,
     @Body() priceDto: PricesDto,

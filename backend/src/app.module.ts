@@ -58,5 +58,6 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('project/prices');
     consumer.apply(AuthMiddleware).forRoutes('low/estimate');
     consumer.apply(AuthMiddleware).forRoutes('low/position');
+    consumer.apply(AuthMiddleware).forRoutes('units');
   }
 }
