@@ -12,11 +12,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { PricesService } from './prices.service';
-import { PriceGuard } from './price.guard';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { PricesDto } from './price.dto';
 import { Price } from 'src/mongo/schemas/price.schema';
 import { Types } from 'mongoose';
+import { PriceGuard } from './price.guard';
 
 @Controller('prices')
 export class PricesController {

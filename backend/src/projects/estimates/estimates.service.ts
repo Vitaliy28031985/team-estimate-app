@@ -5,21 +5,26 @@ import { EstimateInterface } from 'src/interfaces/estimate';
 import { Project } from 'src/mongo/schemas/project/project.schema';
 import { PositionsService } from '../positions/positions.service';
 import { ErrorsApp } from 'src/common/errors';
+// import { LowEstimateService } from '../low-estimate/low-estimate/low.estimate.service';
+import { SettingProjectService } from '../setting-project/setting.project.service';
 
 @Injectable()
 export class EstimatesService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private readonly positionsService: PositionsService,
+    // private readonly lowEstimateService: LowEstimateService,
+    private readonly settingProjectService: SettingProjectService,
   ) {}
 
   async createEstimate(
-    dto: { title: string },
+    dto: { title: string; id?: Types.ObjectId },
     @Param('projectId') projectId: Types.ObjectId,
   ): Promise<Project> {
+    const newEstimateId = !dto.id ? new Types.ObjectId() : dto.id;
     return await this.projectModel.findByIdAndUpdate(
       projectId,
-      { $push: { estimates: dto } },
+      { $push: { estimates: { ...dto, id: newEstimateId } } },
       { new: true },
     );
   }
@@ -40,7 +45,7 @@ export class EstimatesService {
     const estimateList: EstimateInterface[] = project.estimates;
 
     for (let i = 0; i < estimateList.length; i++) {
-      if (estimateList[i]._id.toString() === estimateId.toString()) {
+      if (estimateList[i].id.toString() === estimateId.toString()) {
         estimateList[i].title = dto.title;
       }
     }
@@ -65,13 +70,13 @@ export class EstimatesService {
 
     const estimateList: EstimateInterface[] = project.estimates;
     const isEmptyEstimate = estimateList.some(
-      ({ _id }) => _id.toString() === estimateId.toString(),
+      ({ id }) => id.toString() === estimateId.toString(),
     );
     if (!isEmptyEstimate) {
       throw new NotFoundException(ErrorsApp.NOT_ESTIMATE);
     }
     const newEstimatesList = estimateList.filter(
-      ({ _id }) => _id.toString() !== estimateId.toString(),
+      ({ id }) => id.toString() !== estimateId.toString(),
     );
     await this.projectModel.findByIdAndUpdate(
       projectId,

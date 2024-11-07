@@ -15,6 +15,8 @@ import { PositionsModule } from './projects/positions/positions.module';
 import { MaterialsModule } from './projects/materials/materials.module';
 import { AdvancesModule } from './projects/advances/advances.module';
 import { ProjectPricesModule } from './projects/project-prices/project.prices.module';
+import { LowEstimateModule } from './projects/low-estimate/low-estimate/low.estimate.module';
+import { LowPositionModule } from './projects/low-estimate/low-position/low.position.module';
 config();
 
 @Module({
@@ -39,6 +41,8 @@ config();
     MaterialsModule,
     AdvancesModule,
     ProjectPricesModule,
+    LowEstimateModule,
+    LowPositionModule,
   ],
 })
 export class AppModule {
@@ -52,5 +56,7 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('materials');
     consumer.apply(AuthMiddleware).forRoutes('advances');
     consumer.apply(AuthMiddleware).forRoutes('project/prices');
+    consumer.apply(AuthMiddleware).forRoutes('low/estimate');
+    consumer.apply(AuthMiddleware).forRoutes('low/position');
   }
 }

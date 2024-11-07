@@ -2,16 +2,22 @@ import { Injectable, NotFoundException, Param } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { Project } from 'src/mongo/schemas/project/project.schema';
-import { CreatePositionDto } from './position-dto/position.create.dto';
-import { Helpers } from './helpers';
-import { EstimateInterface } from 'src/interfaces/estimate';
 import { ErrorsApp } from 'src/common/errors';
+import { Project } from 'src/mongo/schemas/project/project.schema';
+import { EstimatesService } from 'src/projects/estimates/estimates.service';
+import { CreatePositionDto } from 'src/projects/positions/position-dto/position.create.dto';
+import { PositionsService } from 'src/projects/positions/positions.service';
+import { SettingProjectService } from 'src/projects/setting-project/setting.project.service';
+import { Helpers } from 'src/projects/positions/helpers';
+import { EstimateInterface } from 'src/interfaces/estimate';
 
 @Injectable()
-export class PositionsService {
+export class LowPositionService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
+    private readonly estimatesService: EstimatesService,
+    private readonly positionsService: PositionsService,
+    private readonly settingService: SettingProjectService,
   ) {}
 
   async createPosition(
@@ -19,7 +25,20 @@ export class PositionsService {
     @Param('projectId') projectId: Types.ObjectId,
     @Param('estimateId') estimateId: Types.ObjectId,
   ) {
-    const newId = !dto.id ? uuidv4() : dto.id;
+    const project = await this.projectModel.findById(
+      projectId,
+      '-createdAt -updatedAt',
+    );
+
+    if (!project) {
+      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
+    }
+
+    if (project.lowEstimates.length === 0) {
+      throw new NotFoundException(ErrorsApp.NOT_LOW_ESTIMATES);
+    }
+
+    const newId = uuidv4();
     let totalPositions = null;
     const positionNew = {
       id: newId,
@@ -30,16 +49,19 @@ export class PositionsService {
       result: Helpers.multiplication(dto.number, dto.price),
     };
 
-    const project = await this.projectModel.findById(
-      projectId,
-      '-createdAt -updatedAt',
-    );
+    const stateDiscountConvert: number = project.lowDiscount * dto.price;
 
-    if (!project) {
-      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
-    }
+    const newPrice = dto.price + stateDiscountConvert;
 
-    const estimateList: EstimateInterface[] = project.estimates;
+    const bigPosition = {
+      id: newId,
+      title: dto.title,
+      unit: dto.unit,
+      number: dto.number,
+      price: newPrice,
+    };
+
+    const estimateList: EstimateInterface[] = project.lowEstimates;
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
         estimateList[i].positions.push(positionNew);
@@ -49,12 +71,18 @@ export class PositionsService {
     }
     await this.projectModel.findByIdAndUpdate(
       projectId,
-      { $set: { estimates: estimateList } },
+      { $set: { lowEstimates: estimateList } },
       { new: true },
     );
 
-    await this.getTotal(projectId);
-    await this.getResults(projectId);
+    await this.settingService.getTotal(projectId);
+    await this.settingService.getResults(projectId);
+
+    await this.positionsService.createPosition(
+      bigPosition,
+      projectId,
+      estimateId,
+    );
     return;
   }
 
@@ -74,7 +102,22 @@ export class PositionsService {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
 
-    const estimateList: EstimateInterface[] = project.estimates;
+    if (project.lowEstimates.length === 0) {
+      throw new NotFoundException(ErrorsApp.NOT_LOW_ESTIMATES);
+    }
+
+    const stateDiscountConvert: number = project.lowDiscount * dto.price;
+
+    const newPrice = dto.price + stateDiscountConvert;
+
+    const bigPosition = {
+      title: dto.title,
+      unit: dto.unit,
+      number: dto.number,
+      price: newPrice,
+    };
+
+    const estimateList: EstimateInterface[] = project.lowEstimates;
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
         const positionsList = estimateList[i].positions;
@@ -96,12 +139,20 @@ export class PositionsService {
     }
     await this.projectModel.findByIdAndUpdate(
       projectId,
-      { $set: { estimates: estimateList } },
+      { $set: { lowEstimates: estimateList } },
       { new: true },
     );
 
-    await this.getTotal(projectId);
-    await this.getResults(projectId);
+    await this.settingService.getTotal(projectId);
+    await this.settingService.getResults(projectId);
+
+    await this.positionsService.updatePosition(
+      bigPosition,
+      projectId,
+      estimateId,
+      positionId,
+    );
+
     return;
   }
 
@@ -120,7 +171,11 @@ export class PositionsService {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
 
-    const estimateList: EstimateInterface[] = project.estimates;
+    if (project.lowEstimates.length === 0) {
+      throw new NotFoundException(ErrorsApp.NOT_LOW_ESTIMATES);
+    }
+
+    const estimateList: EstimateInterface[] = project.lowEstimates;
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
         const newPositionsList = estimateList[i].positions.filter(
@@ -131,57 +186,22 @@ export class PositionsService {
         estimateList[i].total = totalPositions;
       }
     }
-
+    console.log(estimateList);
     await this.projectModel.findByIdAndUpdate(
       projectId,
-      { $set: { estimates: estimateList } },
+      { $set: { lowEstimates: estimateList } },
       { new: true },
     );
-    await this.getTotal(projectId);
-    await this.getResults(projectId);
+
+    await this.settingService.getTotal(projectId);
+    await this.settingService.getResults(projectId);
+
+    await this.positionsService.removePosition(
+      projectId,
+      estimateId,
+      positionId,
+    );
+
     return;
-  }
-
-  async getTotal(projectId: Types.ObjectId) {
-    const project = await this.projectModel.findById(
-      projectId,
-      '-createdAt -updatedAt',
-    );
-
-    const totalEstimates = Helpers.sumEstimate(project);
-
-    await this.projectModel.findByIdAndUpdate(
-      projectId,
-      { $set: { total: totalEstimates } },
-      { new: true },
-    );
-  }
-
-  async getResults(projectId: Types.ObjectId) {
-    const project = await this.projectModel.findById(
-      projectId,
-      '-createdAt -updatedAt',
-    );
-
-    const NewDiscount = project.total * project.discountPercentage;
-    await this.projectModel.findByIdAndUpdate(
-      projectId,
-      { $set: { discount: NewDiscount } },
-      { new: true },
-    );
-
-    const generalArray = await this.projectModel.findById(projectId);
-    const generalResult = Helpers.getGeneral(
-      generalArray.total,
-      generalArray.materialsTotal,
-      generalArray.advancesTotal,
-      NewDiscount,
-    );
-
-    await this.projectModel.findByIdAndUpdate(
-      projectId,
-      { $set: { general: generalResult } },
-      { new: true },
-    );
   }
 }

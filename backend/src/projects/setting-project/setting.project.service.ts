@@ -313,6 +313,11 @@ export class SettingProjectService {
       { $set: { lowEstimates: estimateList } },
       { new: true },
     );
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { lowDiscount: discountConvert } },
+      { new: true },
+    );
 
     await this.getTotal(projectId);
     await this.getResults(projectId);

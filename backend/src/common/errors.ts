@@ -14,6 +14,7 @@ export const ErrorsApp = {
   NOT_PROJECT: 'Такого кошторису не існує!',
   NOT_ESTIMATE: 'Такої таблиці не існує!',
   NOT_DISCOUNT: 'discount має бути числом!',
+  NOT_LOW_ESTIMATES: 'Нижчий кошторис не було створено!',
 
   NOT_VERIFICATION(emailVer) {
     return `Користувач з email ${emailVer} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`;
