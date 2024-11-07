@@ -5,7 +5,6 @@ import { ErrorsApp } from 'src/common/errors';
 import { EstimateInterface } from 'src/interfaces/estimate';
 import { Project } from 'src/mongo/schemas/project/project.schema';
 import { EstimatesService } from 'src/projects/estimates/estimates.service';
-import { PositionsService } from 'src/projects/positions/positions.service';
 import { SettingProjectService } from 'src/projects/setting-project/setting.project.service';
 
 @Injectable()
@@ -13,7 +12,6 @@ export class LowEstimateService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private readonly estimatesService: EstimatesService,
-    private readonly positionsService: PositionsService,
     private readonly settingService: SettingProjectService,
   ) {}
 
@@ -85,5 +83,42 @@ export class LowEstimateService {
     await this.estimatesService.updateEstimated(dto, projectId, estimateId);
 
     return newEstimateLowList;
+  }
+
+  async removeEstimateLow(
+    @Param('projectId') projectId: Types.ObjectId,
+    @Param('estimateId') estimateId: Types.ObjectId,
+  ) {
+    const project = await this.projectModel.findById(
+      projectId,
+      '-createdAt -updatedAt',
+    );
+
+    if (!project) {
+      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
+    }
+    const estimateLowList: EstimateInterface[] = project.lowEstimates;
+    const isEmptyEstimate = estimateLowList.some(
+      ({ id }) => id.toString() === estimateId.toString(),
+    );
+    if (!isEmptyEstimate) {
+      throw new NotFoundException(ErrorsApp.NOT_ESTIMATE);
+    }
+
+    const newEstimatesLowList = estimateLowList.filter(
+      ({ id }) => id.toString() !== estimateId.toString(),
+    );
+
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { lowEstimates: newEstimatesLowList } },
+      { new: true },
+    );
+
+    await this.estimatesService.removeEstimate(projectId, estimateId);
+
+    await this.settingService.getTotal(projectId);
+    await this.settingService.getResults(projectId);
+    return;
   }
 }

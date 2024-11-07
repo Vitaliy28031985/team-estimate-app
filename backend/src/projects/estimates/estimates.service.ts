@@ -5,12 +5,16 @@ import { EstimateInterface } from 'src/interfaces/estimate';
 import { Project } from 'src/mongo/schemas/project/project.schema';
 import { PositionsService } from '../positions/positions.service';
 import { ErrorsApp } from 'src/common/errors';
+// import { LowEstimateService } from '../low-estimate/low-estimate/low.estimate.service';
+import { SettingProjectService } from '../setting-project/setting.project.service';
 
 @Injectable()
 export class EstimatesService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private readonly positionsService: PositionsService,
+    // private readonly lowEstimateService: LowEstimateService,
+    private readonly settingProjectService: SettingProjectService,
   ) {}
 
   async createEstimate(

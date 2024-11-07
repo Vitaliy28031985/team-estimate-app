@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Patch,
   Post,
@@ -39,6 +40,21 @@ export class LowEstimateController {
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.lowEstimateService.updateEstimated(
       dto,
+      objectProjectId,
+      objectEstimatedId,
+    );
+  }
+
+  @Delete('/:projectId/:estimateId')
+  @UsePipes(new ValidationPipe())
+  @UseGuards(ProjectGuard)
+  async remove(
+    @Param('projectId') projectId: string,
+    @Param('estimateId') estimateId: string,
+  ) {
+    const objectProjectId = new Types.ObjectId(projectId);
+    const objectEstimatedId = new Types.ObjectId(estimateId);
+    return await this.lowEstimateService.removeEstimateLow(
       objectProjectId,
       objectEstimatedId,
     );

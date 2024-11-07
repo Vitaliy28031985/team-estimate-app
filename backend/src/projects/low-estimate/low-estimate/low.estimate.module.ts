@@ -23,5 +23,6 @@ import { User, UserSchema } from 'src/mongo/schemas/user/user.schema';
     PositionsService,
     SettingProjectService,
   ],
+  exports: [LowEstimateService],
 })
 export class LowEstimateModule {}
