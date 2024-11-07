@@ -33,6 +33,7 @@ export class UnitsService {
     // }
 
     const newUnit = this.unitModel.create({ ...unitsDto, owner: typedUser });
+    console.log(newUnit);
     return newUnit;
   }
 
