@@ -33,4 +33,10 @@ export const MessageApp = {
   UPDATE_MATERIAL(title: string): string {
     return `Чек на матеріали ${title} успішно оновлено!`;
   },
+  ADD_DISCOUNT(discount: number): string {
+    return `Знижку в розмірі ${discount}% встановлено!`;
+  },
+  ADD_LOW_PROJECT(discount: number): string {
+    return `Кошторис на ${discount}% створено!`;
+  },
 };
