@@ -7,6 +7,7 @@ import { PositionsService } from '../positions/positions.service';
 import { MaterialDto } from './material.dto';
 import { ErrorsApp } from 'src/common/errors';
 import { Helpers } from '../positions/helpers';
+import { MessageApp } from 'src/common/message';
 
 @Injectable()
 export class MaterialsService {
@@ -46,7 +47,7 @@ export class MaterialsService {
     await this.getTotal(projectId);
 
     await this.positionsService.getResults(projectId);
-    return;
+    return { message: MessageApp.CREATE_MATERIALS(dto.title) };
   }
 
   async updateMaterial(
@@ -63,6 +64,11 @@ export class MaterialsService {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
     const materialList = project.materials;
+
+    const isEmptyMaterial = materialList.some(({ id }) => id === materialsId);
+    if (!isEmptyMaterial) {
+      throw new NotFoundException(ErrorsApp.NOT_MATERIAL);
+    }
 
     for (let i = 0; i < materialList.length; i++) {
       if (materialList[i].id === materialsId) {
@@ -90,7 +96,7 @@ export class MaterialsService {
     await this.getTotal(projectId);
 
     await this.positionsService.getResults(projectId);
-    return;
+    return { message: MessageApp.UPDATE_MATERIAL(dto.title) };
   }
 
   async remove(
@@ -104,6 +110,13 @@ export class MaterialsService {
     if (!project) {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
+    const materialList = project.materials;
+
+    const isEmptyMaterial = materialList.some(({ id }) => id === materialsId);
+    if (!isEmptyMaterial) {
+      throw new NotFoundException(ErrorsApp.NOT_MATERIAL);
+    }
+
     const newMaterialsList = project.materials.filter(
       ({ id }) => id !== materialsId,
     );
@@ -117,7 +130,7 @@ export class MaterialsService {
     await this.getTotal(projectId);
 
     await this.positionsService.getResults(projectId);
-    return;
+    return { message: MessageApp.DELETE_MATERIAL };
   }
 
   async getTotal(projectId: Types.ObjectId) {

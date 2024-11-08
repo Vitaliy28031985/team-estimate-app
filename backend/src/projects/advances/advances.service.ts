@@ -7,6 +7,7 @@ import { PositionsService } from '../positions/positions.service';
 import { AdvanceDto } from './advance.dto';
 import { ErrorsApp } from 'src/common/errors';
 import { Helpers } from '../positions/helpers';
+import { MessageApp } from 'src/common/message';
 
 @Injectable()
 export class AdvancesService {
@@ -45,7 +46,7 @@ export class AdvancesService {
 
     await this.getTotal(projectId);
     await this.positionsService.getResults(projectId);
-    return;
+    return { message: MessageApp.ADD_ADVANCE(dto.comment) };
   }
 
   async updateAdvance(
@@ -62,6 +63,12 @@ export class AdvancesService {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
     const advanceArr = project.advances;
+
+    const isEmptyAdvance = advanceArr.some(({ id }) => id === advancesId);
+
+    if (!isEmptyAdvance) {
+      throw new NotFoundException(ErrorsApp.NOT_ADVANCE);
+    }
 
     for (let i = 0; i < advanceArr.length; i++) {
       if (advanceArr[i].id === advancesId) {
@@ -87,7 +94,7 @@ export class AdvancesService {
 
     await this.getTotal(projectId);
     await this.positionsService.getResults(projectId);
-    return;
+    return { message: MessageApp.UPDATE_ADVANCE(dto.comment) };
   }
 
   async removeAdvance(
@@ -101,6 +108,15 @@ export class AdvancesService {
     if (!project) {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
+
+    const advanceArr = project.advances;
+
+    const isEmptyAdvance = advanceArr.some(({ id }) => id === advancesId);
+
+    if (!isEmptyAdvance) {
+      throw new NotFoundException(ErrorsApp.NOT_ADVANCE);
+    }
+
     const newAdvancesList = project.advances.filter(
       ({ id }) => id !== advancesId,
     );
@@ -112,7 +128,7 @@ export class AdvancesService {
     );
     await this.getTotal(projectId);
     await this.positionsService.getResults(projectId);
-    return;
+    return { message: MessageApp.DELETE_ADVANCE };
   }
 
   async getTotal(projectId: Types.ObjectId) {
