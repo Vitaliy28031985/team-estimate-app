@@ -14,5 +14,6 @@ import { PositionsService } from '../positions/positions.service';
   ],
   controllers: [EstimatesController],
   providers: [EstimatesService, PositionsService],
+  exports: [EstimatesService],
 })
 export class EstimatesModule {}

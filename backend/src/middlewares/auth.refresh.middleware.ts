@@ -12,24 +12,25 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { User } from 'src/mongo/schemas/user/user.schema';
 
 @Injectable()
-export class AuthMiddleware implements NestMiddleware {
+export class AuthRefreshMiddleware implements NestMiddleware {
   private readonly secretKey = process.env.SECRET_KEY;
 
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async use(req: RequestWithUser, res: Response, next: NextFunction) {
     const authorization = req.headers.authorization || '';
-    const [bearer, token] = authorization.split(' ');
+
+    const [bearer, refreshToken] = authorization.split(' ');
 
     if (bearer !== 'Bearer') {
       throw new UnauthorizedException(ErrorsApp.NOT_AUTHORIZED);
     }
     try {
-      const { id } = jwt.verify(token, this.secretKey) as {
+      const { id } = jwt.verify(refreshToken, this.secretKey) as {
         id: string;
       };
       const user = await this.userModel.findById(id).exec();
-      if (!user || !user.token) {
+      if (!user || !user.refreshToken) {
         throw new UnauthorizedException(ErrorsApp.NOT_AUTHORIZED);
       }
 

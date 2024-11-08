@@ -110,7 +110,9 @@ export class AuthService {
     };
   }
 
-  async login(loginDto: AuthLoginDto): Promise<{ token: string }> {
+  async login(
+    loginDto: AuthLoginDto,
+  ): Promise<{ token: string; refreshToken: string }> {
     const { email, password } = loginDto;
     const normalizedEmail = email.toLowerCase();
 
@@ -128,10 +130,35 @@ export class AuthService {
     }
     const payload = { id: user._id };
     const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
+    const refreshToken = jwt.sign(payload, this.secretKey, {
+      expiresIn: '7d',
+    });
 
-    await this.userModel.findByIdAndUpdate(user._id, { $set: { token } });
+    await this.userModel.findByIdAndUpdate(user._id, {
+      $set: { token, refreshToken },
+    });
 
-    return { token };
+    return { token, refreshToken };
+  }
+
+  async refreshToken(
+    req: RequestWithUser,
+  ): Promise<{ token: string; refreshToken: string }> {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
+    const payload = { id: typedUser._id };
+    const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
+    const refreshToken = jwt.sign(payload, this.secretKey, {
+      expiresIn: '7d',
+    });
+    await this.userModel.findByIdAndUpdate(user._id, {
+      $set: { token, refreshToken },
+    });
+
+    return { token, refreshToken };
   }
 
   async logout(@Req() req: RequestWithUser) {

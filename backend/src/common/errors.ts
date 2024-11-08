@@ -14,6 +14,10 @@ export const ErrorsApp = {
   NOT_PROJECT: 'Такого кошторису не існує!',
   NOT_ESTIMATE: 'Такої таблиці не існує!',
   NOT_DISCOUNT: 'discount має бути числом!',
+  NOT_LOW_ESTIMATES: 'Нижчий кошторис не було створено!',
+  NOT_POSITION: 'Такої позиції в кошторисі не існує!',
+  NOT_ADVANCE: 'Такої позиції авансу не існує',
+  NOT_AUTHORIZED: 'Ви не авторизовані. Будь ласка авторизуйтеся!',
 
   NOT_VERIFICATION(emailVer: string): string {
     return `Користувач з email ${emailVer} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`;
@@ -29,5 +33,8 @@ export const ErrorsApp = {
 
   EXISTS_ALLOW(email: string): string {
     return `Юзеру з email ${email} вже надано доступ до цього кошторису!`;
+  },
+  NOT_MATERIAL(title: string): string {
+    return `Чеку ${title} не існує!`;
   },
 };

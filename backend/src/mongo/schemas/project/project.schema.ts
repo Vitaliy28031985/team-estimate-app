@@ -34,6 +34,9 @@ export class Project {
   discount: number;
 
   @Prop({ required: true, default: 0 })
+  lowDiscount: number;
+
+  @Prop({ required: true, default: 0 })
   discountPercentage: number;
 
   @Prop({ required: true, default: 0 })

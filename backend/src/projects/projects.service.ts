@@ -29,15 +29,22 @@ export class ProjectsService {
     }
     const typedUser = user as unknown as UserGet;
 
-    for (let i = 0; i < user.projectIds.length; i++) {
-      const currentId = user.projectIds[i].id;
-      const allowProjects = await this.projectModel.find({ _id: currentId });
-      projectsIdArr.push(allowProjects[0]);
+    if (typedUser.role === 'admin') {
+      const projects = await this.projectModel.find();
+      projectsIdArr.push(projects);
+    } else {
+      for (let i = 0; i < user.projectIds.length; i++) {
+        const currentId = user.projectIds[i].id;
+        const allowProjects = await this.projectModel.find({ _id: currentId });
+        projectsIdArr.push(allowProjects[0]);
+      }
+
+      const projectsOwns = await this.projectModel.find({
+        owner: typedUser._id,
+      });
+
+      projectsOwns.map((item) => projectsIdArr.push(item));
     }
-
-    const projectsOwns = await this.projectModel.find({ owner: typedUser._id });
-
-    projectsOwns.map((item) => projectsIdArr.push(item));
 
     const skipCurrent = (page - 1) * limit;
 
@@ -47,6 +54,8 @@ export class ProjectsService {
     const projects = projectsIdArr.slice(skipCurrent, endElement);
 
     const total = projects.length;
+
+    console.log(projects.length);
 
     return { projects, total };
   }
@@ -203,7 +212,7 @@ export class ProjectsService {
     }
     const typedUser = user as unknown as UserGet;
     const prices = await this.priceModel.find({ owner: typedUser._id });
-    const newProject = this.projectModel.create({
+    const newProject = await this.projectModel.create({
       ...projectDto,
       prices,
       owner: typedUser,

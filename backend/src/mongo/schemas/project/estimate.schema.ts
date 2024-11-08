@@ -1,11 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Position, PositionSchema } from './position.schema';
 
 export type EstimateDocument = Estimate & Document;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Estimate {
+  @Prop({ type: Types.ObjectId, required: true })
+  id: Types.ObjectId;
+
   @Prop({ required: true })
   title: string;
 

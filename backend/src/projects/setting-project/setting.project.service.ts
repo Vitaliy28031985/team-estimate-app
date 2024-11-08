@@ -271,6 +271,7 @@ export class SettingProjectService {
     );
 
     await this.positionsService.getResults(projectId);
+    return { message: MessageApp.ADD_DISCOUNT(dto.discount) };
   }
 
   async addLowEstimates(
@@ -313,10 +314,15 @@ export class SettingProjectService {
       { $set: { lowEstimates: estimateList } },
       { new: true },
     );
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { lowDiscount: discountConvert } },
+      { new: true },
+    );
 
     await this.getTotal(projectId);
     await this.getResults(projectId);
-    return;
+    return { message: MessageApp.ADD_LOW_PROJECT(dto.discount) };
   }
 
   async getTotal(projectId: Types.ObjectId) {
