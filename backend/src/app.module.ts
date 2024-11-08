@@ -52,10 +52,7 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('positions');
     consumer.apply(AuthMiddleware).forRoutes('materials');
     consumer.apply(AuthMiddleware).forRoutes('advances');
-<<<<<<< HEAD
     consumer.apply(AuthMiddleware).forRoutes('project/prices');
-=======
     consumer.apply(AuthMiddleware).forRoutes('units');
->>>>>>> victor
   }
 }

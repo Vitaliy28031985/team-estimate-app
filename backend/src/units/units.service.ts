@@ -28,11 +28,10 @@ export class UnitsService {
     }
     const typedUser = user as unknown as UserGet;
 
-    // if (typeof unitsDto. !== 'number') {
-    //   throw new Error('price isn`t number');
-    // }
-
-    const newUnit = this.unitModel.create({ ...unitsDto, owner: typedUser });
+    const newUnit = this.unitModel.create({
+      ...unitsDto,
+      owner: typedUser._id,
+    });
     console.log(newUnit);
     return newUnit;
   }
@@ -99,3 +98,17 @@ export class UnitsService {
     });
   }
 }
+
+// async create(@Req() req: RequestWithUser, unitsDto: UnitsDto): Promise<Unit> {
+//   const user = req.user;
+//   if (!user || typeof user !== 'object' || !('_id' in user)) {
+//     throw new Error(ErrorsApp.EMPTY_USER);
+//   }
+//   // const typedUser = user as unknown as UserGet;
+
+//   const newUnit = await this.unitModel.create({
+//     ...unitsDto,
+//     owner: { _id: user._id },
+//   });
+//   console.log(newUnit);
+//   return newUnit;
