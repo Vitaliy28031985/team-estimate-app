@@ -16,6 +16,7 @@ export const ErrorsApp = {
   NOT_DISCOUNT: 'discount має бути числом!',
   NOT_LOW_ESTIMATES: 'Нижчий кошторис не було створено!',
   NOT_POSITION: 'Такої позиції в кошторисі не існує!',
+  NOT_ADVANCE: 'Такої позиції авансу не існує',
 
   NOT_VERIFICATION(emailVer) {
     return `Користувач з email ${emailVer} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`;
