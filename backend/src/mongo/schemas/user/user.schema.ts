@@ -41,6 +41,9 @@ export class User {
   @Prop({ default: null })
   token?: string;
 
+  @Prop({ default: null })
+  refreshToken?: string;
+
   @Prop({ default: false })
   verify: boolean;
 
