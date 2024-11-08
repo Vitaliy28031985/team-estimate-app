@@ -36,38 +36,6 @@ export class UnitsService {
     return newUnit;
   }
 
-  // async update(
-  //   @Param('priceId') priceId: Types.ObjectId,
-  //   priceDto: PricesDto,
-  //   @Req() req: RequestWithUser,
-  // ): Promise<Price> {
-  //   const user = req.user;
-  //   if (!user || typeof user !== 'object' || !('_id' in user)) {
-  //     throw new Error(ErrorsApp.EMPTY_USER);
-  //   }
-  //   const typedUser = user as unknown as UserGet;
-
-  //   const pricesList = await this.priceModel.find({
-  //     owner: typedUser._id,
-  //   });
-
-  //   if (pricesList.length === 0) {
-  //     throw new NotFoundException(ErrorsApp.NOT_PRICE);
-  //   }
-  //   const targetPrice = pricesList.some(
-  //     ({ _id }) => _id.toString() === String(priceId),
-  //   );
-  //   if (!targetPrice) {
-  //     throw new NotFoundException(ErrorsApp.NOT_PRICE);
-  //   }
-
-  //   return await this.priceModel.findByIdAndUpdate(
-  //     { owner: typedUser._id, _id: priceId },
-  //     priceDto,
-  //     { new: true, fields: ['-createdAt', '-updatedAt'] },
-  //   );
-  // }
-
   async remove(
     @Param('unitId') unitId: Types.ObjectId,
     @Req() req: RequestWithUser,
@@ -98,17 +66,3 @@ export class UnitsService {
     });
   }
 }
-
-// async create(@Req() req: RequestWithUser, unitsDto: UnitsDto): Promise<Unit> {
-//   const user = req.user;
-//   if (!user || typeof user !== 'object' || !('_id' in user)) {
-//     throw new Error(ErrorsApp.EMPTY_USER);
-//   }
-//   // const typedUser = user as unknown as UserGet;
-
-//   const newUnit = await this.unitModel.create({
-//     ...unitsDto,
-//     owner: { _id: user._id },
-//   });
-//   console.log(newUnit);
-//   return newUnit;
