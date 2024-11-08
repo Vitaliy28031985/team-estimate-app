@@ -1,6 +1,7 @@
 export const MessageApp = {
   DELETE_POSITION: 'Позицію кошторису успішно видалено!',
   DELETE_ADVANCE: 'Позицію авансу успішно видалено!',
+  DELETE_MATERIAL: 'Чек успішно видалено!',
   ADD_ALLOW(email: string): string {
     return `Юзеру з email ${email} доступ успішно надано!`;
   },
@@ -15,7 +16,7 @@ export const MessageApp = {
     return `Таблицю  успішно видалено!`;
   },
   CREATE_POSITION(title: string): string {
-    return `Позицію ${title} успішно додано!`;
+    return `Позицію кошторису ${title} успішно додано!`;
   },
   UPDATE_POSITION(title: string): string {
     return `Позицію кошторису ${title} успішно оновлено!`;
@@ -25,5 +26,11 @@ export const MessageApp = {
   },
   UPDATE_ADVANCE(comment: string): string {
     return `Позицію авансу ${comment} успішно оновлено!`;
+  },
+  CREATE_MATERIALS(title: string): string {
+    return `Чек на матеріали ${title} успішно додано!`;
+  },
+  UPDATE_MATERIAL(title: string): string {
+    return `Чек на матеріали ${title} успішно оновлено!`;
   },
 };

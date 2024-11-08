@@ -33,4 +33,7 @@ export const ErrorsApp = {
   EXISTS_ALLOW(email: string): string {
     return `Юзеру з email ${email} вже надано доступ до цього кошторису!`;
   },
+  NOT_MATERIAL(title: string): string {
+    return `Чеку ${title} не існує!`;
+  },
 };
