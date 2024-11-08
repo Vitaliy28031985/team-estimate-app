@@ -52,13 +52,13 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
+  @Get('refresh/current')
+  async RefreshToken(@Req() req: RequestWithUser) {
+    return this.authService.refreshToken(req);
+  }
+
   @Post('logout')
   async logout(@Req() req: RequestWithUser) {
     return this.authService.logout(req);
   }
 }
-// function AuthGuard(
-//   arg0: string,
-// ): Function | import('@nestjs/common').CanActivate {
-//   throw new Error('Function not implemented.');
-// }
