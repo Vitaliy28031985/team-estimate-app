@@ -203,7 +203,7 @@ export class ProjectsService {
     }
     const typedUser = user as unknown as UserGet;
     const prices = await this.priceModel.find({ owner: typedUser._id });
-    const newProject = this.projectModel.create({
+    const newProject = await this.projectModel.create({
       ...projectDto,
       prices,
       owner: typedUser,

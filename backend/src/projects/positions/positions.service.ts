@@ -7,6 +7,7 @@ import { CreatePositionDto } from './position-dto/position.create.dto';
 import { Helpers } from './helpers';
 import { EstimateInterface } from 'src/interfaces/estimate';
 import { ErrorsApp } from 'src/common/errors';
+import { MessageApp } from 'src/common/message';
 
 @Injectable()
 export class PositionsService {
@@ -40,6 +41,14 @@ export class PositionsService {
     }
 
     const estimateList: EstimateInterface[] = project.estimates;
+
+    const isEmptyEstimate = estimateList.some(
+      ({ id }) => id.toString() === estimateId.toString(),
+    );
+    if (!isEmptyEstimate) {
+      throw new NotFoundException(ErrorsApp.NOT_ESTIMATE);
+    }
+
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
         estimateList[i].positions.push(positionNew);
@@ -55,7 +64,7 @@ export class PositionsService {
 
     await this.getTotal(projectId);
     await this.getResults(projectId);
-    return;
+    return { message: MessageApp.CREATE_POSITION(dto.title) };
   }
 
   async updatePosition(
@@ -75,9 +84,23 @@ export class PositionsService {
     }
 
     const estimateList: EstimateInterface[] = project.estimates;
+    const isEmptyEstimate = estimateList.some(
+      ({ id }) => id.toString() === estimateId.toString(),
+    );
+    if (!isEmptyEstimate) {
+      throw new NotFoundException(ErrorsApp.NOT_ESTIMATE);
+    }
+
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
         const positionsList = estimateList[i].positions;
+        const isEmptyPosition = positionsList.some(
+          ({ id }) => id === positionId,
+        );
+
+        if (!isEmptyPosition) {
+          throw new NotFoundException(ErrorsApp.NOT_POSITION);
+        }
         for (let i = 0; i < positionsList.length; i++) {
           if (positionsList[i].id === positionId) {
             positionsList[i].title = dto.title;
@@ -102,7 +125,7 @@ export class PositionsService {
 
     await this.getTotal(projectId);
     await this.getResults(projectId);
-    return;
+    return { message: MessageApp.UPDATE_POSITION(dto.title) };
   }
 
   async removePosition(
@@ -121,8 +144,25 @@ export class PositionsService {
     }
 
     const estimateList: EstimateInterface[] = project.estimates;
+
+    const isEmptyEstimate = estimateList.some(
+      ({ id }) => id.toString() === estimateId.toString(),
+    );
+    if (!isEmptyEstimate) {
+      throw new NotFoundException(ErrorsApp.NOT_ESTIMATE);
+    }
+
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
+        const positionsList = estimateList[i].positions;
+        const isEmptyPosition = positionsList.some(
+          ({ id }) => id === positionId,
+        );
+
+        if (!isEmptyPosition) {
+          throw new NotFoundException(ErrorsApp.NOT_POSITION);
+        }
+
         const newPositionsList = estimateList[i].positions.filter(
           ({ id }) => id !== positionId,
         );
@@ -139,7 +179,7 @@ export class PositionsService {
     );
     await this.getTotal(projectId);
     await this.getResults(projectId);
-    return;
+    return { message: MessageApp.DELETE_POSITION };
   }
 
   async getTotal(projectId: Types.ObjectId) {
