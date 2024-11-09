@@ -10,11 +10,13 @@ import {
 import { EstimatesService } from 'src/projects/estimates/estimates.service';
 import { SettingProjectService } from 'src/projects/setting-project/setting.project.service';
 import { User, UserSchema } from 'src/mongo/schemas/user/user.schema';
+import { Price, PriceSchema } from 'src/mongo/schemas/price.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Project.name, schema: ProjectSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Price.name, schema: PriceSchema }]),
   ],
   controllers: [LowEstimateController],
   providers: [

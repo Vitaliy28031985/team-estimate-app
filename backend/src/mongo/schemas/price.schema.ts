@@ -12,6 +12,9 @@ export class Price {
   @Prop({ required: true })
   price: number;
 
+  @Prop({ default: false })
+  updateAllow: boolean;
+
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   owner: Types.ObjectId;
 }

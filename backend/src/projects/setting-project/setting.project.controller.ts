@@ -76,8 +76,9 @@ export class SettingProjectController {
   async addLowEstimates(
     @Body() dto: { discount: number },
     @Param('projectId') projectId: string,
+    @Req() req: RequestWithUser,
   ) {
     const objectId = new Types.ObjectId(projectId);
-    return await this.settingProjectService.addLowEstimates(dto, objectId);
+    return await this.settingProjectService.addLowEstimates(dto, objectId, req);
   }
 }
