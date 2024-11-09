@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException, Param, Req } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Param,
+  Req,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { UserGet } from 'src/interfaces/userGet';
@@ -25,6 +31,7 @@ export class PricesService {
     priceDto: PricesDto,
     @Req() req: RequestWithUser,
   ): Promise<Price> {
+    const newPriceId = new Types.ObjectId();
     const user = req.user;
     if (!user || typeof user !== 'object' || !('_id' in user)) {
       throw new Error(ErrorsApp.EMPTY_USER);
@@ -35,7 +42,21 @@ export class PricesService {
       throw new Error('price isn`t number');
     }
 
-    const newPrice = this.priceModel.create({ ...priceDto, owner: typedUser });
+    const prices = await this.priceModel.find({ owner: typedUser._id });
+
+    const isExistPrice = prices.some(
+      ({ title }) =>
+        title.toLocaleLowerCase() === priceDto.title.toLocaleLowerCase(),
+    );
+
+    if (isExistPrice) {
+      throw new ConflictException(ErrorsApp.EXIST_PRICE(priceDto.title));
+    }
+    const newPrice = await this.priceModel.create({
+      ...priceDto,
+      id: newPriceId,
+      owner: typedUser._id,
+    });
     return newPrice;
   }
 
