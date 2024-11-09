@@ -37,4 +37,13 @@ export const ErrorsApp = {
   NOT_MATERIAL(title: string): string {
     return `Чеку ${title} не існує!`;
   },
+  EXIST_PRICE(title: string): string {
+    return `Позиція прайсу ${title} вже існує!`;
+  },
+  EXIST_POSITION(title: string): string {
+    return `Позиція кошторису ${title} вже існує!`;
+  },
+  EXIST_ESTIMATE(title: string): string {
+    return `Таблиця ${title} вже існує!`;
+  },
 };

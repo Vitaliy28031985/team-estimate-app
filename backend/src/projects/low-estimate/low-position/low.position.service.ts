@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,6 +15,7 @@ import { PositionsService } from 'src/projects/positions/positions.service';
 import { SettingProjectService } from 'src/projects/setting-project/setting.project.service';
 import { Helpers } from 'src/projects/positions/helpers';
 import { EstimateInterface } from 'src/interfaces/estimate';
+import { MessageApp } from 'src/common/message';
 
 @Injectable()
 export class LowPositionService {
@@ -62,8 +68,22 @@ export class LowPositionService {
     };
 
     const estimateList: EstimateInterface[] = project.lowEstimates;
+    const isEmptyEstimate = estimateList.some(
+      ({ id }) => id.toString() === estimateId.toString(),
+    );
+    if (!isEmptyEstimate) {
+      throw new NotFoundException(ErrorsApp.NOT_ESTIMATE);
+    }
+
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
+        const positionsList = estimateList[i].positions;
+        const existPosition = positionsList.some(
+          ({ title }) => title.toLowerCase() === dto.title.toLocaleLowerCase(),
+        );
+        if (existPosition) {
+          throw new ConflictException(ErrorsApp.EXIST_POSITION(dto.title));
+        }
         estimateList[i].positions.push(positionNew);
         totalPositions = Helpers.sumData(estimateList[i]);
         estimateList[i].total = totalPositions;
@@ -83,7 +103,7 @@ export class LowPositionService {
       projectId,
       estimateId,
     );
-    return;
+    return { message: MessageApp.CREATE_POSITION(dto.title) };
   }
 
   async updatePosition(
@@ -118,9 +138,24 @@ export class LowPositionService {
     };
 
     const estimateList: EstimateInterface[] = project.lowEstimates;
+
+    const isEmptyEstimate = estimateList.some(
+      ({ id }) => id.toString() === estimateId.toString(),
+    );
+    if (!isEmptyEstimate) {
+      throw new NotFoundException(ErrorsApp.NOT_ESTIMATE);
+    }
+
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
         const positionsList = estimateList[i].positions;
+        const isEmptyPosition = positionsList.some(
+          ({ id }) => id === positionId,
+        );
+
+        if (!isEmptyPosition) {
+          throw new NotFoundException(ErrorsApp.NOT_POSITION);
+        }
         for (let i = 0; i < positionsList.length; i++) {
           if (positionsList[i].id === positionId) {
             positionsList[i].title = dto.title;
@@ -153,7 +188,7 @@ export class LowPositionService {
       positionId,
     );
 
-    return;
+    return { message: MessageApp.UPDATE_POSITION(dto.title) };
   }
 
   async removePosition(
@@ -176,8 +211,22 @@ export class LowPositionService {
     }
 
     const estimateList: EstimateInterface[] = project.lowEstimates;
+    const isEmptyEstimate = estimateList.some(
+      ({ id }) => id.toString() === estimateId.toString(),
+    );
+    if (!isEmptyEstimate) {
+      throw new NotFoundException(ErrorsApp.NOT_ESTIMATE);
+    }
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
+        const positionsList = estimateList[i].positions;
+        const isEmptyPosition = positionsList.some(
+          ({ id }) => id === positionId,
+        );
+
+        if (!isEmptyPosition) {
+          throw new NotFoundException(ErrorsApp.NOT_POSITION);
+        }
         const newPositionsList = estimateList[i].positions.filter(
           ({ id }) => id !== positionId,
         );
@@ -202,6 +251,6 @@ export class LowPositionService {
       positionId,
     );
 
-    return;
+    return { message: MessageApp.DELETE_POSITION };
   }
 }
