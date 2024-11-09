@@ -19,6 +19,7 @@ import { LowEstimateModule } from './projects/low-estimate/low-estimate/low.esti
 import { LowPositionModule } from './projects/low-estimate/low-position/low.position.module';
 import { AuthRefreshMiddleware } from './middlewares/auth.refresh.middleware';
 import { ReviewsModule } from './reviews/reviews.module';
+import { LowProjectPriceModule } from './projects/low-project-price/low.project.price.module';
 config();
 
 @Module({
@@ -46,6 +47,7 @@ config();
     LowEstimateModule,
     LowPositionModule,
     ReviewsModule,
+    LowProjectPriceModule,
   ],
 })
 export class AppModule {
@@ -62,6 +64,7 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('low/estimate');
     consumer.apply(AuthMiddleware).forRoutes('low/position');
     consumer.apply(AuthMiddleware).forRoutes('units');
+    consumer.apply(AuthMiddleware).forRoutes('low/project/price');
     consumer.apply(AuthRefreshMiddleware).forRoutes('auth/refresh/current');
   }
 }

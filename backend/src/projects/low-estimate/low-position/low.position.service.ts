@@ -23,7 +23,7 @@ export class LowPositionService {
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private readonly estimatesService: EstimatesService,
     private readonly positionsService: PositionsService,
-    private readonly settingService: SettingProjectService,
+    public readonly settingService: SettingProjectService,
   ) {}
 
   async createPosition(

@@ -18,6 +18,7 @@ import { DeleteAllowDto } from './dto/delete.dto';
 import { PositionsService } from '../positions/positions.service';
 import { EstimateInterface } from 'src/interfaces/estimate';
 import { Helpers } from '../positions/helpers';
+import { Price } from 'src/mongo/schemas/price.schema';
 
 @Injectable()
 export class SettingProjectService {
@@ -25,6 +26,7 @@ export class SettingProjectService {
     @InjectModel(Project.name) private projectModel: Model<Project>,
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly positionsService: PositionsService,
+    @InjectModel(Price.name) private priceModel: Model<Price>,
   ) {}
 
   async addAllowProject(
@@ -277,7 +279,13 @@ export class SettingProjectService {
   async addLowEstimates(
     dto: { discount: number },
     @Param('projectId') projectId: Types.ObjectId,
+    @Req() req: RequestWithUser,
   ) {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
     const project = await this.projectModel.findById(
       projectId,
       '-createdAt -updatedAt',
@@ -309,11 +317,25 @@ export class SettingProjectService {
       const newTotalEstimates = Helpers.sumData(estimateList[i]);
       estimateList[i].total = newTotalEstimates;
     }
+
+    const lowPrices = await this.priceModel.find({ owner: typedUser._id });
+
+    for (let i = 0; i < lowPrices.length; i++) {
+      lowPrices[i].price =
+        lowPrices[i].price - lowPrices[i].price * discountConvert;
+    }
     await this.projectModel.findByIdAndUpdate(
       projectId,
       { $set: { lowEstimates: estimateList } },
       { new: true },
     );
+
+    await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $set: { lowPrices: lowPrices } },
+      { new: true },
+    );
+
     await this.projectModel.findByIdAndUpdate(
       projectId,
       { $set: { lowDiscount: discountConvert } },
