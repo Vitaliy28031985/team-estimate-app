@@ -18,6 +18,7 @@ import { ProjectGuard } from '../project/project.guard';
 export class SettingProjectController {
   constructor(private readonly settingProjectService: SettingProjectService) {}
   @Patch('/add/:projectId')
+  @UseGuards(ProjectGuard)
   async addAllowProject(
     @Body() allowDto: AddAllowDto,
     @Param('projectId') projectId: string,
@@ -32,6 +33,7 @@ export class SettingProjectController {
   }
 
   @Patch('/update/:projectId')
+  @UseGuards(ProjectGuard)
   async updateAllowProject(
     @Body() allowDto: AddAllowDto,
     @Param('projectId') projectId: string,
@@ -46,6 +48,7 @@ export class SettingProjectController {
   }
 
   @Patch('/delete/:projectId')
+  @UseGuards(ProjectGuard)
   async deleteAllowProject(
     @Body() allowDto: DeleteAllowDto,
     @Param('projectId') projectId: string,

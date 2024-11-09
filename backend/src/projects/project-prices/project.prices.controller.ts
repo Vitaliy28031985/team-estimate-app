@@ -10,9 +10,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ProjectPricesService } from './project.prices.service';
-import { CreateProjectGuard } from '../project/create.project.guard.guard';
 import { PricesDto } from 'src/prices/price.dto';
 import { Types } from 'mongoose';
+import { ProjectGuard } from '../project/project.guard';
 
 @Controller('project/prices')
 export class ProjectPricesController {
@@ -20,7 +20,7 @@ export class ProjectPricesController {
 
   @Post('/:projectId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(CreateProjectGuard)
+  @UseGuards(ProjectGuard)
   async create(@Body() dto: PricesDto, @Param('projectId') projectId: string) {
     const objectId = new Types.ObjectId(projectId);
     return await this.projectPricesService.createPrice(dto, objectId);
@@ -28,7 +28,7 @@ export class ProjectPricesController {
 
   @Patch('/:projectId/:priceId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(CreateProjectGuard)
+  @UseGuards(ProjectGuard)
   async update(
     @Body() dto: PricesDto,
     @Param('projectId') projectId: string,
@@ -39,7 +39,7 @@ export class ProjectPricesController {
   }
 
   @Delete('/:projectId/:priceId')
-  @UseGuards(CreateProjectGuard)
+  @UseGuards(ProjectGuard)
   async remove(
     @Param('projectId') projectId: string,
     @Param('priceId') priceId: string,

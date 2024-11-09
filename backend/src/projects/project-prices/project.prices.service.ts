@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ErrorsApp } from 'src/common/errors';
@@ -8,6 +13,7 @@ import { PositionsService } from '../positions/positions.service';
 import { PriceInterface } from 'src/interfaces/priceInterface';
 import { EstimateInterface } from 'src/interfaces/estimate';
 import { Helpers } from '../positions/helpers';
+import { MessageApp } from 'src/common/message';
 
 @Injectable()
 export class ProjectPricesService {
@@ -28,6 +34,13 @@ export class ProjectPricesService {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
     const projectPrices = project.prices;
+    const isEmptyPrice = projectPrices.some(
+      ({ title }) =>
+        title.toLocaleLowerCase() === dto.title.toLocaleLowerCase(),
+    );
+    if (isEmptyPrice) {
+      throw new ConflictException(ErrorsApp.EXIST_PRICE(dto.title));
+    }
     const newPrice = [...projectPrices, dto];
 
     return await this.projectModel.findByIdAndUpdate(
@@ -54,6 +67,7 @@ export class ProjectPricesService {
 
     for (let i = 0; i < projectPrices.length; i++) {
       if (projectPrices[i]._id.toString() === priceId.toString()) {
+        projectPrices[i].title = dto.title;
         projectPrices[i].price = dto.price;
         currentTitle = projectPrices[i].title;
       }
@@ -61,7 +75,7 @@ export class ProjectPricesService {
 
     await this.projectModel.findByIdAndUpdate(
       projectId,
-      { $set: { price: projectPrices } },
+      { $set: { prices: projectPrices } },
       { new: true },
     );
 
@@ -92,7 +106,7 @@ export class ProjectPricesService {
 
     await this.positionsService.getTotal(projectId);
     await this.positionsService.getResults(projectId);
-    return;
+    return { message: MessageApp.UPDATE_PROJECT_PRICE(dto.title) };
   }
 
   async removePrice(
@@ -112,10 +126,11 @@ export class ProjectPricesService {
       ({ _id }) => _id.toString() !== priceId.toString(),
     );
 
-    return await this.projectModel.findByIdAndUpdate(
+    await this.projectModel.findByIdAndUpdate(
       projectId,
       { $set: { prices: newProjectPriceList } },
       { new: true },
     );
+    return { message: MessageApp.DELETE_PRICE };
   }
 }
