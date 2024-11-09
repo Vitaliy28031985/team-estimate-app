@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
@@ -51,6 +56,14 @@ export class PositionsService {
 
     for (let i = 0; i < estimateList.length; i++) {
       if (estimateList[i].id.toString() === estimateId.toString()) {
+        const positionsList = estimateList[i].positions;
+        const existPosition = positionsList.some(
+          ({ title }) => title.toLowerCase() === dto.title.toLocaleLowerCase(),
+        );
+        if (existPosition) {
+          throw new ConflictException(ErrorsApp.EXIST_POSITION(dto.title));
+        }
+
         estimateList[i].positions.push(positionNew);
         totalPositions = Helpers.sumData(estimateList[i]);
         estimateList[i].total = totalPositions;

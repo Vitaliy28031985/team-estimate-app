@@ -18,6 +18,7 @@ import { ProjectPricesModule } from './projects/project-prices/project.prices.mo
 import { LowEstimateModule } from './projects/low-estimate/low-estimate/low.estimate.module';
 import { LowPositionModule } from './projects/low-estimate/low-position/low.position.module';
 import { AuthRefreshMiddleware } from './middlewares/auth.refresh.middleware';
+import { ReviewsModule } from './reviews/reviews.module';
 config();
 
 @Module({
@@ -44,6 +45,7 @@ config();
     ProjectPricesModule,
     LowEstimateModule,
     LowPositionModule,
+    ReviewsModule,
   ],
 })
 export class AppModule {

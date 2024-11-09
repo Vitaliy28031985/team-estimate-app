@@ -43,4 +43,7 @@ export const ErrorsApp = {
   EXIST_POSITION(title: string): string {
     return `Позиція кошторису ${title} вже існує!`;
   },
+  EXIST_ESTIMATE(title: string): string {
+    return `Таблиця ${title} вже існує!`;
+  },
 };
