@@ -6,6 +6,9 @@ export type PriceDocument = Price & Document;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Price {
+  @Prop({ type: Types.ObjectId, required: true })
+  id: Types.ObjectId;
+
   @Prop({ required: true })
   title: string;
 

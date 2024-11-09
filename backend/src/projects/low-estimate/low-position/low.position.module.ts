@@ -25,5 +25,6 @@ import { Price, PriceSchema } from 'src/mongo/schemas/price.schema';
     PositionsService,
     SettingProjectService,
   ],
+  exports: [LowPositionService],
 })
 export class LowPositionModule {}
