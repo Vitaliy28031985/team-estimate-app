@@ -23,7 +23,7 @@ export class User {
 
   @Prop({
     default:
-      'https://res.cloudinary.com/ddzcjknmj/image/upload/v1729612276/Avatar_uqicfl.png',
+      'https://res.cloudinary.com/ddzcjknmj/image/upload/v1731220706/Group_427321632_xsewqc.png',
     required: true,
   })
   avatar?: string;
