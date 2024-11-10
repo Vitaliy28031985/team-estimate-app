@@ -109,6 +109,7 @@ export class ProjectsService {
           advancesTotal: project.advancesTotal,
           materials: project.materials,
           advances: project.advances,
+          lowPrices: project.lowPrices,
           lowEstimates: project.lowEstimates,
           lowTotal: project.lowTotal,
           lowGeneral: project.lowGeneral,
@@ -122,6 +123,7 @@ export class ProjectsService {
           _id: project._id,
           title: project.title,
           description: project.description,
+          lowPrices: project.lowPrices,
           lowEstimates: project.lowEstimates,
           lowTotal: project.lowTotal,
         };
@@ -174,6 +176,7 @@ export class ProjectsService {
           prices: project.prices,
           estimates: project.estimates,
           lowEstimates: project.lowEstimates,
+          lowPrices: project.lowPrices,
           lowTotal: project.lowTotal,
           lowGeneral: project.lowGeneral,
           total: project.total,
@@ -195,6 +198,7 @@ export class ProjectsService {
           prices: project.prices,
           estimates: project.estimates,
           lowEstimates: project.lowEstimates,
+          lowPrices: project.lowPrices,
           lowTotal: project.lowTotal,
           total: project.total,
         };

@@ -9,21 +9,23 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ProjectPricesService } from './project.prices.service';
+import { LowProjectPriceService } from './low.project.price.service';
+import { ProjectGuard } from '../project/project.guard';
 import { PricesDto } from 'src/prices/price.dto';
 import { Types } from 'mongoose';
-import { ProjectGuard } from '../project/project.guard';
 
-@Controller('project/prices')
-export class ProjectPricesController {
-  constructor(private readonly projectPricesService: ProjectPricesService) {}
+@Controller('low/project/price')
+export class LowProjectPriceController {
+  constructor(
+    private readonly lowProjectPriceService: LowProjectPriceService,
+  ) {}
 
   @Post('/:projectId')
   @UsePipes(new ValidationPipe())
   @UseGuards(ProjectGuard)
   async create(@Body() dto: PricesDto, @Param('projectId') projectId: string) {
     const objectId = new Types.ObjectId(projectId);
-    return await this.projectPricesService.createPrice(dto, objectId);
+    return await this.lowProjectPriceService.createPrice(dto, objectId);
   }
 
   @Patch('/:projectId/:priceId')
@@ -35,7 +37,11 @@ export class ProjectPricesController {
     @Param('priceId') priceId: string,
   ) {
     const objectId = new Types.ObjectId(projectId);
-    return await this.projectPricesService.updatePrice(dto, objectId, priceId);
+    return await this.lowProjectPriceService.updatePrice(
+      dto,
+      objectId,
+      priceId,
+    );
   }
 
   @Delete('/:projectId/:priceId')
@@ -45,6 +51,6 @@ export class ProjectPricesController {
     @Param('priceId') priceId: string,
   ) {
     const objectId = new Types.ObjectId(projectId);
-    return await this.projectPricesService.removePrice(objectId, priceId);
+    return await this.lowProjectPriceService.removePrice(objectId, priceId);
   }
 }

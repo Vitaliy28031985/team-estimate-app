@@ -18,6 +18,8 @@ export const ErrorsApp = {
   NOT_POSITION: 'Такої позиції в кошторисі не існує!',
   NOT_ADVANCE: 'Такої позиції авансу не існує',
   NOT_AUTHORIZED: 'Ви не авторизовані. Будь ласка авторизуйтеся!',
+  FORBIDDEN_PRICE_UPDATE:
+    'У вас немає прав для редагування цієї позиції прайсу!',
 
   NOT_VERIFICATION(emailVer: string): string {
     return `Користувач з email ${emailVer} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`;
@@ -36,5 +38,14 @@ export const ErrorsApp = {
   },
   NOT_MATERIAL(title: string): string {
     return `Чеку ${title} не існує!`;
+  },
+  EXIST_PRICE(title: string): string {
+    return `Позиція прайсу ${title} вже існує!`;
+  },
+  EXIST_POSITION(title: string): string {
+    return `Позиція кошторису ${title} вже існує!`;
+  },
+  EXIST_ESTIMATE(title: string): string {
+    return `Таблиця ${title} вже існує!`;
   },
 };

@@ -30,6 +30,9 @@ export class Project {
   @Prop({ type: [PriceSchema], default: [] })
   prices: Price[];
 
+  @Prop({ type: [PriceSchema], default: [] })
+  lowPrices: Price[];
+
   @Prop({ required: true, default: 0 })
   discount: number;
 

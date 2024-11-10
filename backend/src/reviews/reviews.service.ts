@@ -6,4 +6,7 @@ import { Review } from 'src/mongo/schemas/reviews.schema';
 @Injectable()
 export class ReviewsService {
   constructor(@InjectModel(Review.name) private ReviewsModule: Model<Review>) {}
+  async getAll() {
+    return await this.ReviewsModule.find();
+  }
 }

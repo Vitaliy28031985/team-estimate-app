@@ -2,6 +2,7 @@ export const MessageApp = {
   DELETE_POSITION: 'Позицію кошторису успішно видалено!',
   DELETE_ADVANCE: 'Позицію авансу успішно видалено!',
   DELETE_MATERIAL: 'Чек успішно видалено!',
+  DELETE_PRICE: 'Позицію прайсу успішно видалено!',
   ADD_ALLOW(email: string): string {
     return `Юзеру з email ${email} доступ успішно надано!`;
   },
@@ -38,5 +39,8 @@ export const MessageApp = {
   },
   ADD_LOW_PROJECT(discount: number): string {
     return `Кошторис на ${discount}% створено!`;
+  },
+  UPDATE_PROJECT_PRICE(title: string): string {
+    return `Позицію прайсу ${title} успішно оновлено!`;
   },
 };

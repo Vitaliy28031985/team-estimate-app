@@ -14,5 +14,6 @@ import { PositionsService } from '../positions/positions.service';
   ],
   controllers: [ProjectPricesController],
   providers: [ProjectPricesService, PositionsService],
+  exports: [ProjectPricesService],
 })
 export class ProjectPricesModule {}

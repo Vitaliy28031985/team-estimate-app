@@ -1,7 +1,13 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ErrorsApp } from 'src/common/errors';
+import { MessageApp } from 'src/common/message';
 import { EstimateInterface } from 'src/interfaces/estimate';
 import { Project } from 'src/mongo/schemas/project/project.schema';
 import { EstimatesService } from 'src/projects/estimates/estimates.service';
@@ -31,6 +37,14 @@ export class LowEstimateService {
 
     if (project.lowEstimates.length === 0) {
       throw new NotFoundException(ErrorsApp.NOT_LOW_ESTIMATES);
+    }
+    const estimateList: EstimateInterface[] = project.lowEstimates;
+    const exitEstimate = estimateList.some(
+      ({ title }) =>
+        title.toLocaleLowerCase() === dto.title.toLocaleLowerCase(),
+    );
+    if (exitEstimate) {
+      throw new ConflictException(ErrorsApp.EXIST_ESTIMATE(dto.title));
     }
     const newLowEstimate = await this.projectModel.findByIdAndUpdate(
       projectId,
@@ -119,6 +133,6 @@ export class LowEstimateService {
 
     await this.settingService.getTotal(projectId);
     await this.settingService.getResults(projectId);
-    return;
+    return { message: MessageApp.DELETE_ESTIMATE() };
   }
 }
