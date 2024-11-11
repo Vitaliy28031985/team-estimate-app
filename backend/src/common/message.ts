@@ -3,6 +3,7 @@ export const MessageApp = {
   DELETE_ADVANCE: 'Позицію авансу успішно видалено!',
   DELETE_MATERIAL: 'Чек успішно видалено!',
   DELETE_PRICE: 'Позицію прайсу успішно видалено!',
+  UPDATE_AVATAR: 'Вашу фотографію успіщно оновлено!',
   ADD_ALLOW(email: string): string {
     return `Юзеру з email ${email} доступ успішно надано!`;
   },
