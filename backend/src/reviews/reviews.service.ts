@@ -22,6 +22,7 @@ export class ReviewsService {
     const newReview = await this.ReviewsModel.create({
       ...reviewDto,
       owner: typedUser._id,
+      name: typedUser.name,
     });
     return newReview;
   }

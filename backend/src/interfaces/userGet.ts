@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 
 export interface UserGet {
   _id: Types.ObjectId;
+  name: string;
   role: string;
   projectIds: Array<{
     id: string;

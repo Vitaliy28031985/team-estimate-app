@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Req,
   UsePipes,
@@ -11,6 +12,7 @@ import { ReviewsService } from './reviews.service';
 import { ReviewDto } from './review.dto';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { Review } from 'src/mongo/schemas/reviews.schema';
+import { Types } from 'mongoose';
 
 @Controller('reviews')
 export class ReviewsController {
@@ -30,7 +32,8 @@ export class ReviewsController {
     return await this.reviewsService.create(req, reviewDto);
   }
 
-  // updateReview() {} приватний Route не важливо яка роль користувача. Будь який користувач може редагувати свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
+  // приватний Route не важливо яка роль користувача. Будь який користувач може редагувати свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
+  async updateReview(@Param('reviewId') reviewId: Types.ObjectId) {}
 
   // removeReview() {} приватний Route не важливо яка роль користувача. Будь який користувач може видалити свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
 }
