@@ -20,7 +20,7 @@ import { LowPositionModule } from './projects/low-estimate/low-position/low.posi
 import { AuthRefreshMiddleware } from './middlewares/auth.refresh.middleware';
 import { ReviewsModule } from './reviews/reviews.module';
 import { LowProjectPriceModule } from './projects/low-project-price/low.project.price.module';
-
+import { UserModule } from './user/user.module';
 config();
 
 @Module({
@@ -49,12 +49,14 @@ config();
     LowPositionModule,
     ReviewsModule,
     LowProjectPriceModule,
+    UserModule,
   ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('auth/logout');
     consumer.apply(AuthMiddleware).forRoutes('prices');
+    consumer.apply(AuthMiddleware).forRoutes('user');
     consumer.apply(AuthMiddleware).forRoutes('projects');
     consumer.apply(AuthMiddleware).forRoutes('setting/project');
     consumer.apply(AuthMiddleware).forRoutes('estimates');
@@ -66,6 +68,7 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('low/position');
     consumer.apply(AuthMiddleware).forRoutes('units');
     consumer.apply(AuthMiddleware).forRoutes('low/project/price');
+    consumer.apply(AuthMiddleware).forRoutes('reviews/create');
     consumer.apply(AuthRefreshMiddleware).forRoutes('auth/refresh/current');
     consumer.apply().forRoutes('reviews');
     consumer.apply(AuthMiddleware).forRoutes('reviews/create');
