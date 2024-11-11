@@ -21,8 +21,8 @@ export const ErrorsApp = {
   FORBIDDEN_PRICE_UPDATE:
     'У вас немає прав для редагування цієї позиції прайсу!',
 
-  NOT_VERIFICATION(emailVer: string): string {
-    return `Користувач з email ${emailVer} не підтвердив своєї реєстрації! Перейдіть будь ласка на свою електронну скриньку для підтвердження реєстрації!`;
+  NOT_VERIFICATION(emailVer) {
+    return `Користувач з email ${emailVer} не підтвердив своєї електроннної скриньки! Перейдіть будь ласка на свою електронну скриньку для підтвердження!`;
   },
 
   NOT_USER(email: string): string {
