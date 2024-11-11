@@ -4,6 +4,7 @@ import {
   Param,
   Req,
   UnauthorizedException,
+  //   UploadedFile,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -18,6 +19,7 @@ import { User } from 'src/mongo/schemas/user/user.schema';
 import { UserUpdateEmailDto } from './dtos/user.update.email.dto';
 import { UserUpdatePhone } from './dtos/user.update.phone.dto';
 import { UserUpdatePassword } from './dtos/user.update.password.dto';
+// import cloudinary from 'src/utils/cloudinary';
 config();
 const { VERIFY_EMAIL_LINK } = process.env;
 
@@ -149,4 +151,26 @@ export class UserService {
       { new: true },
     );
   }
+
+  //   async changeAvatar(
+  //     @UploadedFile() file: Express.Multer.File,
+  //     req: RequestWithUser,
+  //   ) {
+  //     const avatarData = await cloudinary.uploader.upload(file.path);
+
+  //     const user = req.user;
+  //     if (!user || typeof user !== 'object' || !('_id' in user)) {
+  //       throw new Error(ErrorsApp.NOT_AUTHORIZED);
+  //     }
+  //     const typedUser = user as unknown as UserGet;
+
+  //     await this.userModel.findByIdAndUpdate(
+  //       { _id: typedUser._id },
+  //       { avatar: avatarData.secure_url },
+  //       {
+  //         new: true,
+  //         fields: ['-createdAt', '-updatedAt'],
+  //       },
+  //     );
+  //   }
 }

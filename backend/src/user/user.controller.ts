@@ -5,6 +5,8 @@ import {
   Param,
   Put,
   Req,
+  // UploadedFile,
+  // UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,6 +15,8 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { UserUpdateEmailDto } from './dtos/user.update.email.dto';
 import { UserUpdatePhone } from './dtos/user.update.phone.dto';
 import { UserUpdatePassword } from './dtos/user.update.password.dto';
+// import { FileInterceptor } from '@nestjs/platform-express';
+// import { multerOptions } from 'src/utils/multer';
 
 @Controller('user')
 export class UserController {
@@ -65,4 +69,17 @@ export class UserController {
   ) {
     return await this.userService.changePassword(dto, req);
   }
+
+  // @Put('avatar')
+  // @UseInterceptors(FileInterceptor('avatar'))
+  // async changeAvatar(
+  //   @UploadedFile() file: Express.Multer.File,
+  //   @Req() req: RequestWithUser,
+  // ) {
+  //   console.log(file);
+  //   if (!file) {
+  //     throw new Error('No file uploaded');
+  //   }
+  //   return await this.userService.changeAvatar(req);
+  // }
 }
