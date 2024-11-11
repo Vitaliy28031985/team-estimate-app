@@ -49,4 +49,10 @@ export class UserController {
   async changePhone(@Body() dto: UserUpdatePhone, @Req() req: RequestWithUser) {
     return await this.userService.changePhone(dto, req);
   }
+
+  @Put('role')
+  @UsePipes(new ValidationPipe())
+  async changeRole(@Body() dto: { role: string }, @Req() req: RequestWithUser) {
+    return await this.userService.changeRole(dto, req);
+  }
 }

@@ -104,4 +104,17 @@ export class UserService {
       fields: ['-createdAt', '-updatedAt'],
     });
   }
+
+  async changeRole(dto: { role: string }, @Req() req: RequestWithUser) {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.NOT_AUTHORIZED);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    return await this.userModel.findByIdAndUpdate({ _id: typedUser._id }, dto, {
+      new: true,
+      fields: ['-createdAt', '-updatedAt'],
+    });
+  }
 }
