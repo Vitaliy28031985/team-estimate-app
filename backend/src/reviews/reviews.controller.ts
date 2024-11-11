@@ -2,10 +2,7 @@ import {
   Body,
   Controller,
   Get,
-<<<<<<< HEAD
   Param,
-=======
->>>>>>> main
   Post,
   Req,
   UsePipes,
