@@ -9,6 +9,7 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { UserGet } from 'src/interfaces/userGet';
 import { User } from 'src/mongo/schemas/user/user.schema';
 import { UserUpdateEmailDto } from './dtos/user.update.email.dto';
+import { UserUpdatePhone } from './dtos/user.update.phone.dto';
 config();
 const { VERIFY_EMAIL_LINK } = process.env;
 
@@ -88,6 +89,19 @@ export class UserService {
     return this.userModel.findByIdAndUpdate(user._id, {
       verify: true,
       verificationToken: null,
+    });
+  }
+
+  async changePhone(dto: UserUpdatePhone, @Req() req: RequestWithUser) {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.NOT_AUTHORIZED);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    return await this.userModel.findByIdAndUpdate({ _id: typedUser._id }, dto, {
+      new: true,
+      fields: ['-createdAt', '-updatedAt'],
     });
   }
 }

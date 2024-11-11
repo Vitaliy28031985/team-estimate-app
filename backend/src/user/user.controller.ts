@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Param, Put, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  Req,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { UserUpdateEmailDto } from './dtos/user.update.email.dto';
+import { UserUpdatePhone } from './dtos/user.update.phone.dto';
 
 @Controller('user')
 export class UserController {
@@ -18,6 +28,7 @@ export class UserController {
   }
 
   @Put('email')
+  @UsePipes(new ValidationPipe())
   async changeEmail(
     @Body() dto: UserUpdateEmailDto,
     @Req() req: RequestWithUser,
@@ -31,5 +42,11 @@ export class UserController {
     verificationToken: string,
   ) {
     return await this.userService.verifyEmail(verificationToken);
+  }
+
+  @Put('phone')
+  @UsePipes(new ValidationPipe())
+  async changePhone(@Body() dto: UserUpdatePhone, @Req() req: RequestWithUser) {
+    return await this.userService.changePhone(dto, req);
   }
 }
