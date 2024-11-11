@@ -24,7 +24,7 @@ export class UnitsController {
   @Get()
   @UseGuards(RoleGuard)
   async getAll(@Req() req: RequestWithUser) {
-    return this.unitsService.findAll(req);
+    return await this.unitsService.findAll(req);
   }
 
   @Post()
