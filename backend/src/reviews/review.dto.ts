@@ -1,9 +1,11 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsInt, IsString, Max, Min } from 'class-validator';
 
 export class ReviewDto {
   @IsString()
   comment: string;
 
-  @IsNumber()
+  @IsInt()
+  @Min(1)
+  @Max(5)
   rating: number;
 }

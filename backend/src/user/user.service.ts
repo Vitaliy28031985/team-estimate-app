@@ -4,7 +4,7 @@ import {
   Param,
   Req,
   UnauthorizedException,
-  //   UploadedFile,
+  UploadedFile,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -19,7 +19,10 @@ import { User } from 'src/mongo/schemas/user/user.schema';
 import { UserUpdateEmailDto } from './dtos/user.update.email.dto';
 import { UserUpdatePhone } from './dtos/user.update.phone.dto';
 import { UserUpdatePassword } from './dtos/user.update.password.dto';
-// import cloudinary from 'src/utils/cloudinary';
+import cloudinary from 'src/utils/cloudinary';
+import { Readable } from 'stream';
+import { UploadApiResponse } from 'cloudinary';
+import { MessageApp } from 'src/common/message';
 config();
 const { VERIFY_EMAIL_LINK } = process.env;
 
@@ -152,25 +155,48 @@ export class UserService {
     );
   }
 
-  //   async changeAvatar(
-  //     @UploadedFile() file: Express.Multer.File,
-  //     req: RequestWithUser,
-  //   ) {
-  //     const avatarData = await cloudinary.uploader.upload(file.path);
+  async changeAvatar(
+    @UploadedFile() file: Express.Multer.File,
+    req: RequestWithUser,
+  ) {
+    if (!file || !file.buffer) {
+      throw new Error(ErrorsApp.NOT_UPDATE_AVATAR);
+    }
 
-  //     const user = req.user;
-  //     if (!user || typeof user !== 'object' || !('_id' in user)) {
-  //       throw new Error(ErrorsApp.NOT_AUTHORIZED);
-  //     }
-  //     const typedUser = user as unknown as UserGet;
+    const bufferStream = new Readable();
+    bufferStream.push(file.buffer);
+    bufferStream.push(null);
 
-  //     await this.userModel.findByIdAndUpdate(
-  //       { _id: typedUser._id },
-  //       { avatar: avatarData.secure_url },
-  //       {
-  //         new: true,
-  //         fields: ['-createdAt', '-updatedAt'],
-  //       },
-  //     );
-  //   }
+    const result = await new Promise<UploadApiResponse>((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'avatars' },
+        (error, data) => {
+          if (error) {
+            reject(new Error(ErrorsApp.NOT_UPDATE_AVATAR + error.message));
+          }
+          resolve(data as UploadApiResponse);
+        },
+      );
+
+      bufferStream.pipe(uploadStream);
+    });
+    const avatarUrl = result.secure_url;
+
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.NOT_AUTHORIZED);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    await this.userModel.findByIdAndUpdate(
+      { _id: typedUser._id },
+      { avatar: avatarUrl },
+      {
+        new: true,
+        fields: ['-createdAt', '-updatedAt'],
+      },
+    );
+
+    return { message: MessageApp.UPDATE_AVATAR };
+  }
 }
