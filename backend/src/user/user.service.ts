@@ -1,6 +1,13 @@
-import { ConflictException, Injectable, Param, Req } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Param,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { config } from 'dotenv';
 import { ErrorsApp } from 'src/common/errors';
@@ -10,6 +17,7 @@ import { UserGet } from 'src/interfaces/userGet';
 import { User } from 'src/mongo/schemas/user/user.schema';
 import { UserUpdateEmailDto } from './dtos/user.update.email.dto';
 import { UserUpdatePhone } from './dtos/user.update.phone.dto';
+import { UserUpdatePassword } from './dtos/user.update.password.dto';
 config();
 const { VERIFY_EMAIL_LINK } = process.env;
 
@@ -116,5 +124,29 @@ export class UserService {
       new: true,
       fields: ['-createdAt', '-updatedAt'],
     });
+  }
+
+  async changePassword(dto: UserUpdatePassword, @Req() req: RequestWithUser) {
+    const { oldPassword, newPassword } = dto;
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.NOT_AUTHORIZED);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!passwordMatch) {
+      throw new UnauthorizedException(ErrorsApp.BAD_PASSWORD);
+    }
+
+    return await this.userModel.findByIdAndUpdate(
+      typedUser._id,
+      {
+        $set: {
+          password: newPassword,
+        },
+      },
+      { new: true },
+    );
   }
 }

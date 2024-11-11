@@ -12,6 +12,7 @@ import { UserService } from './user.service';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { UserUpdateEmailDto } from './dtos/user.update.email.dto';
 import { UserUpdatePhone } from './dtos/user.update.phone.dto';
+import { UserUpdatePassword } from './dtos/user.update.password.dto';
 
 @Controller('user')
 export class UserController {
@@ -54,5 +55,14 @@ export class UserController {
   @UsePipes(new ValidationPipe())
   async changeRole(@Body() dto: { role: string }, @Req() req: RequestWithUser) {
     return await this.userService.changeRole(dto, req);
+  }
+
+  @Put('password')
+  @UsePipes(new ValidationPipe())
+  async changePassword(
+    @Body() dto: UserUpdatePassword,
+    @Req() req: RequestWithUser,
+  ) {
+    return await this.userService.changePassword(dto, req);
   }
 }
