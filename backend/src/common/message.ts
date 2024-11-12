@@ -4,6 +4,7 @@ export const MessageApp = {
   DELETE_MATERIAL: 'Чек успішно видалено!',
   DELETE_PRICE: 'Позицію прайсу успішно видалено!',
   UPDATE_AVATAR: 'Вашу фотографію успіщно оновлено!',
+  UPDATE_PASSWORD: 'Ваш пароль успішно оновлено!',
   ADD_ALLOW(email: string): string {
     return `Юзеру з email ${email} доступ успішно надано!`;
   },
