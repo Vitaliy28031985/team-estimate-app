@@ -5,7 +5,6 @@ import { Project } from 'src/mongo/schemas/project/project.schema';
 import { CreateProjectDto } from './projects-dtos/create.project.dto';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { UserGet } from 'src/interfaces/userGet';
-import { ProjectResponse } from 'src/interfaces/project.response';
 import { Price } from 'src/mongo/schemas/price.schema';
 import { ErrorsApp } from 'src/common/errors';
 import { AlowUserList } from 'src/interfaces/alow.user.list';
@@ -21,7 +20,7 @@ export class ProjectsService {
     @Req() req: RequestWithUser,
     page: number = 1,
     limit: number = 1,
-  ): Promise<ProjectResponse> {
+  ) {
     const projectsIdArr = [];
     const user = req.user;
     if (!user || typeof user !== 'object' || !('_id' in user)) {
@@ -51,11 +50,17 @@ export class ProjectsService {
     const endElement =
       projectsIdArr.length < limit ? projectsIdArr.length : skipCurrent + limit;
 
-    const projects = projectsIdArr.slice(skipCurrent, endElement);
+    const selectKeyProjects = projectsIdArr.map(
+      ({ _id, title, description }) => ({
+        _id,
+        title,
+        description,
+      }),
+    );
+
+    const projects = selectKeyProjects.slice(skipCurrent, endElement);
 
     const total = projects.length;
-
-    console.log(projects.length);
 
     return { projects, total };
   }

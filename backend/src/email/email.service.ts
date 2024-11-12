@@ -18,4 +18,18 @@ export class EmailService {
       throw new Error('Email sending failed');
     }
   }
+
+  async sendPinEmail(email: string, number: number) {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Код підтвердження!',
+        html: `<div><p>Будь ласка, введіть цей код:${number} у діалоговому вікні застосунку!</p></div>`,
+      });
+      console.log('Email sent successfully');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw new Error('Email sending failed');
+    }
+  }
 }

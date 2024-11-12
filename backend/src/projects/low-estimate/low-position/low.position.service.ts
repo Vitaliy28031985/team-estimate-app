@@ -16,6 +16,7 @@ import { SettingProjectService } from 'src/projects/setting-project/setting.proj
 import { Helpers } from 'src/projects/positions/helpers';
 import { EstimateInterface } from 'src/interfaces/estimate';
 import { MessageApp } from 'src/common/message';
+import { PriceInterfaceLow } from 'src/interfaces/price.interface';
 
 @Injectable()
 export class LowPositionService {
@@ -125,18 +126,46 @@ export class LowPositionService {
     if (project.lowEstimates.length === 0) {
       throw new NotFoundException(ErrorsApp.NOT_LOW_ESTIMATES);
     }
+    let allow: boolean = true;
+    let allowPrice: number = null;
+
+    const lowPrices: PriceInterfaceLow[] = project.lowPrices;
+    if (lowPrices.length !== 0) {
+      for (let i = 0; i < lowPrices.length; i++) {
+        if (
+          lowPrices[i].title.toLocaleLowerCase() ===
+          dto.title.toLocaleLowerCase()
+        ) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          allow = lowPrices[i].updateAllow;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          allowPrice = lowPrices[i].price;
+        }
+      }
+    }
 
     const stateDiscountConvert: number = project.lowDiscount * dto.price;
 
     const newPrice = dto.price + stateDiscountConvert;
 
+    const positionNew = {
+      title: dto.title,
+      unit: dto.unit,
+      number: dto.number,
+      price: allow ? dto.price : allowPrice,
+      result: Helpers.multiplication(
+        dto.number,
+        allow ? dto.price : allowPrice,
+      ),
+    };
+
     const bigPosition = {
       title: dto.title,
       unit: dto.unit,
       number: dto.number,
-      price: newPrice,
+      price: allow ? newPrice : allowPrice + project.lowDiscount * allowPrice,
     };
-
+    console.log(bigPosition);
     const estimateList: EstimateInterface[] = project.lowEstimates;
 
     const isEmptyEstimate = estimateList.some(
@@ -158,14 +187,11 @@ export class LowPositionService {
         }
         for (let i = 0; i < positionsList.length; i++) {
           if (positionsList[i].id === positionId) {
-            positionsList[i].title = dto.title;
-            positionsList[i].unit = dto.unit;
-            positionsList[i].number = dto.number;
-            positionsList[i].price = dto.price;
-            positionsList[i].result = Helpers.multiplication(
-              dto.number,
-              dto.price,
-            );
+            positionsList[i].title = positionNew.title;
+            positionsList[i].unit = positionNew.unit;
+            positionsList[i].number = positionNew.number;
+            positionsList[i].price = positionNew.price;
+            positionsList[i].result = positionNew.result;
           }
         }
         totalPositions = Helpers.sumData(estimateList[i]);
