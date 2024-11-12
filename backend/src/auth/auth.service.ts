@@ -186,9 +186,11 @@ export class AuthService {
 
     await this.emailService.sendPinEmail(dto.email, verifyCode);
 
-    return this.userModel.findByIdAndUpdate(user._id, {
+    await this.userModel.findByIdAndUpdate(user._id, {
       verifyCode,
     });
+
+    return { message: MessageApp.SEND_VERIFY_CODE };
   }
 
   async verifyCode(dto: VerifyCodeDto) {
