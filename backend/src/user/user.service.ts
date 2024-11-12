@@ -23,6 +23,7 @@ import cloudinary from 'src/utils/cloudinary';
 import { Readable } from 'stream';
 import { UploadApiResponse } from 'cloudinary';
 import { MessageApp } from 'src/common/message';
+import { UserUpdateRoleDto } from './dtos/user.update.role.dto';
 config();
 const { VERIFY_EMAIL_LINK } = process.env;
 
@@ -118,7 +119,7 @@ export class UserService {
     });
   }
 
-  async changeRole(dto: { role: string }, @Req() req: RequestWithUser) {
+  async changeRole(dto: UserUpdateRoleDto, @Req() req: RequestWithUser) {
     const user = req.user;
     if (!user || typeof user !== 'object' || !('_id' in user)) {
       throw new Error(ErrorsApp.NOT_AUTHORIZED);

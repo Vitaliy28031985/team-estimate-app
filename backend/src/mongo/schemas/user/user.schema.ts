@@ -44,6 +44,9 @@ export class User {
   @Prop({ default: null })
   refreshToken?: string;
 
+  @Prop({ default: null })
+  verifyCode: string;
+
   @Prop({ default: false })
   verify: boolean;
 
