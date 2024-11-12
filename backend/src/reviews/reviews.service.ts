@@ -1,6 +1,6 @@
-import { Injectable, Req } from '@nestjs/common';
+import { Injectable, Param, Req } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { Review } from 'src/mongo/schemas/reviews.schema';
 import { ReviewDto } from './review.dto';
@@ -13,6 +13,7 @@ export class ReviewsService {
   async getAll() {
     return await this.ReviewsModel.find();
   }
+
   async create(@Req() req: RequestWithUser, reviewDto: ReviewDto) {
     const user = req.user;
     if (!user || typeof user !== 'object' || !('_id' in user)) {
@@ -25,5 +26,37 @@ export class ReviewsService {
       name: typedUser.name,
     });
     return newReview;
+  }
+
+  async update(
+    @Param('reviewId') reviewId: Types.ObjectId,
+    reviewDto: ReviewDto,
+    @Req() req: RequestWithUser,
+  ): Promise<Review> {
+    const user = req.user;
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
+
+    // const pricesList = await this.ReviewsModel.find({
+    //   owner: typedUser._id,
+    // });
+
+    // if (pricesList.length === 0) {
+    //   throw new NotFoundException(ErrorsApp.NOT_PRICE);
+    // }
+    // const targetPrice = pricesList.some(
+    //   ({ _id }) => _id.toString() === String(priceId),
+    // );
+    // if (!targetPrice) {
+    //   throw new NotFoundException(ErrorsApp.NOT_PRICE);
+    // }
+
+    return await this.ReviewsModel.findByIdAndUpdate(
+      { owner: typedUser._id, _id: reviewId },
+      reviewDto,
+      { new: true, fields: ['-createdAt', '-updatedAt'] },
+    );
   }
 }

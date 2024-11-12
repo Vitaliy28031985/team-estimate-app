@@ -68,9 +68,9 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('low/position');
     consumer.apply(AuthMiddleware).forRoutes('units');
     consumer.apply(AuthMiddleware).forRoutes('low/project/price');
-    consumer.apply(AuthMiddleware).forRoutes('reviews/create');
     consumer.apply(AuthRefreshMiddleware).forRoutes('auth/refresh/current');
     consumer.apply().forRoutes('reviews');
     consumer.apply(AuthMiddleware).forRoutes('reviews/create');
+    consumer.apply(AuthMiddleware).forRoutes('reviews/:reviewId');
   }
 }

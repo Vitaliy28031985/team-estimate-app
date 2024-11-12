@@ -1,11 +1,11 @@
 import {
   // IsEnum,
   IsIn,
-  IsInt,
+  // IsInt,
   IsOptional,
   IsString,
-  Max,
-  Min,
+  // Max,
+  // Min,
 } from 'class-validator';
 
 export class ReviewDto {
@@ -26,8 +26,6 @@ export class ReviewUpdateDto {
   comment: string;
 
   @IsOptional()
-  @IsInt()
-  @Min(1)
-  @Max(5)
+  @IsIn([1, 2, 3, 4, 5])
   rating: number;
 }

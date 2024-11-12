@@ -4,12 +4,13 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { ReviewDto } from './review.dto';
+import { ReviewDto, ReviewUpdateDto } from './review.dto';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { Review } from 'src/mongo/schemas/reviews.schema';
 import { Types } from 'mongoose';
@@ -32,8 +33,15 @@ export class ReviewsController {
     return await this.reviewsService.create(req, reviewDto);
   }
 
-  // приватний Route не важливо яка роль користувача. Будь який користувач може редагувати свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
-  async updateReview(@Param('reviewId') reviewId: Types.ObjectId) {}
+  @Put(':reviewId') // приватний Route не важливо яка роль користувача. Будь який користувач може редагувати свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
+  @UsePipes(new ValidationPipe())
+  async updateReview(
+    @Param('reviewId') reviewId: Types.ObjectId,
+    @Body() reviewUpdateDto: ReviewUpdateDto,
+    @Req() req: RequestWithUser,
+  ) {
+    return await this.reviewsService.update(reviewId, reviewUpdateDto, req);
+  }
 
   // removeReview() {} приватний Route не важливо яка роль користувача. Будь який користувач може видалити свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
 }
