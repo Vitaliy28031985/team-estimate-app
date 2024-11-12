@@ -15,6 +15,8 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { AuthCreateDto } from './auth-dto/auth.create.dto';
 import { AuthLoginDto } from './auth-dto/auth.login.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UserUpdateEmailDto } from 'src/user/dtos/user.update.email.dto';
+import { VerifyCodeDto } from './auth-dto/verify.code.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -60,5 +62,17 @@ export class AuthController {
   @Post('logout')
   async logout(@Req() req: RequestWithUser) {
     return this.authService.logout(req);
+  }
+
+  @Post('send/verify')
+  @UsePipes(new ValidationPipe())
+  async sendVerifyCode(@Body() dto: UserUpdateEmailDto) {
+    return this.authService.sendVerifyCode(dto);
+  }
+
+  @Post('verify')
+  @UsePipes(new ValidationPipe())
+  async verifyCode(@Body() dto: VerifyCodeDto) {
+    return this.authService.verifyCode(dto);
   }
 }

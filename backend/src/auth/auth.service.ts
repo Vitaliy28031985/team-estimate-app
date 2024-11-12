@@ -11,7 +11,7 @@ import * as bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { config } from 'dotenv';
 import * as jwt from 'jsonwebtoken';
-
+import { randomBytes } from 'crypto';
 import { EmailService } from '../email/email.service';
 import { User } from 'src/mongo/schemas/user/user.schema';
 import { UserGet } from 'src/interfaces/userGet';
@@ -19,6 +19,9 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { AuthCreateDto } from './auth-dto/auth.create.dto';
 import { AuthLoginDto } from './auth-dto/auth.login.dto';
 import { ErrorsApp } from 'src/common/errors';
+import { UserUpdateEmailDto } from 'src/user/dtos/user.update.email.dto';
+import { VerifyCodeDto } from './auth-dto/verify.code.dto';
+import { MessageApp } from 'src/common/message';
 config();
 const { VERIFY_EMAIL_LINK } = process.env;
 
@@ -169,5 +172,57 @@ export class AuthService {
     const typedUser = user as unknown as UserGet;
 
     return this.userModel.findByIdAndUpdate(typedUser._id, { token: null });
+  }
+
+  async sendVerifyCode(dto: UserUpdateEmailDto) {
+    const normalizedEmail = dto.email.toLowerCase();
+
+    const user = await this.userModel.findOne({ email: normalizedEmail });
+    if (!user) {
+      throw new UnauthorizedException(ErrorsApp.EMPTY_USER);
+    }
+
+    const verifyCode = this.generateRandomNumber();
+
+    await this.emailService.sendPinEmail(dto.email, verifyCode);
+
+    await this.userModel.findByIdAndUpdate(user._id, {
+      verifyCode,
+    });
+
+    return { message: MessageApp.SEND_VERIFY_CODE };
+  }
+
+  async verifyCode(dto: VerifyCodeDto) {
+    const normalizedEmail = dto.email.toLowerCase();
+
+    const user = await this.userModel.findOne({ email: normalizedEmail });
+    if (!user) {
+      throw new UnauthorizedException(ErrorsApp.EMPTY_USER);
+    }
+
+    if (Number(user.verifyCode) !== dto.code) {
+      throw new UnauthorizedException(ErrorsApp.BAD_CODE);
+    }
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    console.log('code pass!', hashedPassword);
+
+    await this.userModel.findByIdAndUpdate(user._id, {
+      password: hashedPassword,
+      verifyCode: null,
+    });
+
+    return { message: MessageApp.UPDATE_PASSWORD };
+  }
+
+  generateRandomNumber(): number {
+    const buffer = randomBytes(5);
+
+    const randomNumber = buffer.readUInt32BE(0) * 256 + buffer[4];
+    return (
+      Math.floor(
+        (randomNumber / 0xffffffffff) * (9999999999 - 1000000000 + 1),
+      ) + 1000000000
+    );
   }
 }

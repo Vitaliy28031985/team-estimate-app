@@ -2,11 +2,13 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Param,
+  ParseFilePipeBuilder,
   Put,
   Req,
-  // UploadedFile,
-  // UseInterceptors,
+  UploadedFile,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -15,8 +17,9 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { UserUpdateEmailDto } from './dtos/user.update.email.dto';
 import { UserUpdatePhone } from './dtos/user.update.phone.dto';
 import { UserUpdatePassword } from './dtos/user.update.password.dto';
-// import { FileInterceptor } from '@nestjs/platform-express';
-// import { multerOptions } from 'src/utils/multer';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ErrorsApp } from 'src/common/errors';
+import { UserUpdateRoleDto } from './dtos/user.update.role.dto';
 
 @Controller('user')
 export class UserController {
@@ -57,7 +60,10 @@ export class UserController {
 
   @Put('role')
   @UsePipes(new ValidationPipe())
-  async changeRole(@Body() dto: { role: string }, @Req() req: RequestWithUser) {
+  async changeRole(
+    @Body() dto: UserUpdateRoleDto,
+    @Req() req: RequestWithUser,
+  ) {
     return await this.userService.changeRole(dto, req);
   }
 
@@ -70,16 +76,27 @@ export class UserController {
     return await this.userService.changePassword(dto, req);
   }
 
-  // @Put('avatar')
-  // @UseInterceptors(FileInterceptor('avatar'))
-  // async changeAvatar(
-  //   @UploadedFile() file: Express.Multer.File,
-  //   @Req() req: RequestWithUser,
-  // ) {
-  //   console.log(file);
-  //   if (!file) {
-  //     throw new Error('No file uploaded');
-  //   }
-  //   return await this.userService.changeAvatar(req);
-  // }
+  @Put('avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  async changeAvatar(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /^(image\/jpeg|image\/jpg|image\/png|image\/svg\+xml)$/,
+        })
+        .addMaxSizeValidator({
+          maxSize: 10000000,
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: Express.Multer.File,
+    @Req() req: RequestWithUser,
+  ) {
+    if (!file) {
+      throw new Error(ErrorsApp.NOT_UPDATE_AVATAR);
+    }
+    return await this.userService.changeAvatar(file, req);
+  }
 }
