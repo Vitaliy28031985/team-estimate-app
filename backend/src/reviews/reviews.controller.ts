@@ -34,7 +34,7 @@ export class ReviewsController {
     return await this.reviewsService.create(req, reviewDto);
   }
 
-  @Put(':reviewId') // приватний Route не важливо яка роль користувача. Будь який користувач може редагувати свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
+  @Put('review/:reviewId') // приватний Route не важливо яка роль користувача. Будь який користувач може редагувати свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
   @UsePipes(new ValidationPipe())
   async updateReview(
     @Param('reviewId') reviewId: Types.ObjectId,
@@ -44,7 +44,7 @@ export class ReviewsController {
     return await this.reviewsService.update(reviewId, reviewUpdateDto, req);
   }
 
-  @Delete(':reviewId') // removeReview() {} приватний Route не важливо яка роль користувача. Будь який користувач може видалити свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
+  @Delete('review/:reviewId') // removeReview() {} приватний Route не важливо яка роль користувача. Будь який користувач може видалити свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
   async delete(
     @Param('reviewId') revievId: Types.ObjectId,
     @Req() req: RequestWithUser,

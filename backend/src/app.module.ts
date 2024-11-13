@@ -21,7 +21,7 @@ import { AuthRefreshMiddleware } from './middlewares/auth.refresh.middleware';
 import { ReviewsModule } from './reviews/reviews.module';
 import { LowProjectPriceModule } from './projects/low-project-price/low.project.price.module';
 import { UserModule } from './user/user.module';
-// import { IsValidIdMiddleware } from './middlewares/isValidId.middleware';
+import { IsValidIdMiddleware } from './middlewares/isValidId.middleware';
 config();
 
 @Module({
@@ -71,8 +71,10 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('low/project/price');
     consumer.apply(AuthRefreshMiddleware).forRoutes('auth/refresh/current');
     consumer.apply().forRoutes('reviews');
+    consumer
+      .apply(AuthMiddleware, IsValidIdMiddleware)
+      .forRoutes('reviews/review/:reviewId');
     consumer.apply(AuthMiddleware).forRoutes('reviews/create');
-    consumer.apply(AuthMiddleware).forRoutes('reviews/:reviewId');
     // consumer.apply(IsValidIdMiddleware).forRoutes('reviews/:reviewId');
   }
 }
