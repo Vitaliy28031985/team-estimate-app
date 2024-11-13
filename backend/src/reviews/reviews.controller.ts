@@ -1,23 +1,26 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
+  Put,
   Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { ReviewDto } from './review.dto';
+import { ReviewDto, ReviewUpdateDto } from './review.dto';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { Review } from 'src/mongo/schemas/reviews.schema';
+import { Types } from 'mongoose';
 
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
-  // публічний роут не потрібно пропускати через middleware
   @Get()
-  async getAllReview() {
+  async getAllReviews() {
     return await this.reviewsService.getAll();
   }
 
@@ -30,7 +33,21 @@ export class ReviewsController {
     return await this.reviewsService.create(req, reviewDto);
   }
 
-  // updateReview() {} приватний Route не важливо яка роль користувача. Будь який користувач може редагувати свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
+  @Put(':reviewId')
+  @UsePipes(new ValidationPipe())
+  async updateReview(
+    @Param('reviewId') reviewId: Types.ObjectId,
+    @Body() reviewUpdateDto: ReviewUpdateDto,
+    @Req() req: RequestWithUser,
+  ) {
+    return await this.reviewsService.update(reviewId, reviewUpdateDto, req);
+  }
 
-  // removeReview() {} приватний Route не важливо яка роль користувача. Будь який користувач може видалити свій відгук, потрібно пропускати через middleware щоб перевірити чи користувач аутентифікувався.
+  @Delete(':reviewId')
+  async delete(
+    @Param('reviewId') reviewId: Types.ObjectId,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.reviewsService.deleteReview(reviewId, req);
+  }
 }
