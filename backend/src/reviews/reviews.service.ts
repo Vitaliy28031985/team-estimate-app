@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException, Param, Req } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Param,
+  Req,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
@@ -6,7 +12,7 @@ import { Review } from 'src/mongo/schemas/reviews.schema';
 import { ReviewDto } from './review.dto';
 import { ErrorsApp } from 'src/common/errors';
 import { UserGet } from 'src/interfaces/userGet';
-import { ReviewsModule } from './reviews.module';
+// import { ReviewsModule } from './reviews.module';
 
 @Injectable()
 export class ReviewsService {
@@ -39,6 +45,9 @@ export class ReviewsService {
       throw new Error(ErrorsApp.EMPTY_USER);
     }
     const typedUser = user as unknown as UserGet;
+    if (Object.keys(req.body).length === 0) {
+      throw new BadRequestException(ErrorsApp.EMPTY_BODY);
+    }
 
     // const pricesList = await this.ReviewsModel.find({
     //   owner: typedUser._id,

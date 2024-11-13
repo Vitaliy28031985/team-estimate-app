@@ -12,6 +12,7 @@ export const ErrorsApp = {
   BAD_PASSWORD: 'Невірний пароль! Спробуйте ще!',
   NOT_PRICE: 'Такої позиції прайсу не існує!',
   NOT_REVIEW: 'Такого коментаря не існує!',
+  EMPTY_BODY: 'Body must have at least one field!',
   NOT_PROJECT: 'Такого кошторису не існує!',
   NOT_ESTIMATE: 'Такої таблиці не існує!',
   NOT_DISCOUNT: 'discount має бути числом!',
