@@ -15,6 +15,13 @@ export class Review {
   @Prop({ required: true, enum: [1, 2, 3, 4, 5] })
   rating: number;
 
+  @Prop({
+    default:
+      'https://res.cloudinary.com/ddzcjknmj/image/upload/v1731220706/Group_427321632_xsewqc.png',
+    required: true,
+  })
+  avatar?: string;
+
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   owner: Types.ObjectId;
 }
