@@ -205,8 +205,6 @@ export class AuthService {
       throw new UnauthorizedException(ErrorsApp.BAD_CODE);
     }
     const hashedPassword = await bcrypt.hash(dto.password, 10);
-    console.log('code pass!', hashedPassword);
-
     await this.userModel.findByIdAndUpdate(user._id, {
       password: hashedPassword,
       verifyCode: null,

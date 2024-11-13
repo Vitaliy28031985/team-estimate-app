@@ -12,8 +12,13 @@ export class Review {
   @Prop({ required: true })
   comment: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, enum: [1, 2, 3, 4, 5] })
   rating: number;
+
+  @Prop({
+    required: false,
+  })
+  avatar?: string;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   owner: Types.ObjectId;

@@ -165,7 +165,6 @@ export class LowPositionService {
       number: dto.number,
       price: allow ? newPrice : allowPrice + project.lowDiscount * allowPrice,
     };
-    console.log(bigPosition);
     const estimateList: EstimateInterface[] = project.lowEstimates;
 
     const isEmptyEstimate = estimateList.some(
@@ -261,7 +260,6 @@ export class LowPositionService {
         estimateList[i].total = totalPositions;
       }
     }
-    console.log(estimateList);
     await this.projectModel.findByIdAndUpdate(
       projectId,
       { $set: { lowEstimates: estimateList } },
