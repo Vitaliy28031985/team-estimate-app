@@ -1,5 +1,7 @@
+import { user } from './../interfaces/user';
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   Param,
@@ -40,32 +42,25 @@ export class ReviewsService {
     reviewDto: ReviewDto,
     @Req() req: RequestWithUser,
   ): Promise<Review> {
+    if (Object.keys(req.body).length === 0) {
+      throw new BadRequestException(ErrorsApp.EMPTY_BODY);
+    }
     const user = req.user;
     if (!user || typeof user !== 'object' || !('_id' in user)) {
       throw new Error(ErrorsApp.EMPTY_USER);
     }
     const typedUser = user as unknown as UserGet;
-    if (Object.keys(req.body).length === 0) {
-      throw new BadRequestException(ErrorsApp.EMPTY_BODY);
-    }
+    console.log(typedUser._id);
 
-    // const pricesList = await this.ReviewsModel.find({
-    //   owner: typedUser._id,
-    // });
-
-    // if (pricesList.length === 0) {
-    //   throw new NotFoundException(ErrorsApp.NOT_PRICE);
-    // }
-    // const targetPrice = pricesList.some(
-    //   ({ _id }) => _id.toString() === String(priceId),
-    // );
-    // if (!targetPrice) {
-    //   throw new NotFoundException(ErrorsApp.NOT_PRICE);
-    // }
-    const rewiew = await this.ReviewsModel.findById(reviewId);
-    if (!rewiew) {
+    const review = await this.ReviewsModel.findById(reviewId);
+    console.log(review);
+    if (!review) {
       console.log('NOT_REVIEW');
       throw new NotFoundException(ErrorsApp.NOT_REVIEW);
+    }
+
+    if (review.owner.toString() !== typedUser._id.toString()) {
+      throw new ForbiddenException("You don't have access to this action!");
     }
 
     return await this.ReviewsModel.findByIdAndUpdate(
@@ -73,5 +68,26 @@ export class ReviewsService {
       reviewDto,
       { new: true, fields: ['-createdAt', '-updatedAt'] },
     );
+  }
+
+  async deleteReview(
+    @Param('reviewId') reviewId: Types.ObjectId,
+    req: RequestWithUser,
+  ): Promise<Review> {
+    const user = req.user;
+    const review = await this.ReviewsModel.findById(reviewId);
+    console.log(review);
+    if (!review) {
+      throw new NotFoundException(ErrorsApp.NOT_REVIEW);
+    }
+    if (!user || typeof user !== 'object' || !('_id' in user)) {
+      throw new Error(ErrorsApp.EMPTY_USER);
+    }
+    const typedUser = user as unknown as UserGet;
+    if (review.owner.toString() !== typedUser._id.toString()) {
+      throw new ForbiddenException("You don't have access to this action!");
+    }
+
+    return await this.ReviewsModel.findByIdAndDelete(reviewId);
   }
 }
