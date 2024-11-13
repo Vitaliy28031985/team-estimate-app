@@ -4,6 +4,7 @@ export interface UserGet {
   _id: Types.ObjectId;
   name: string;
   role: string;
+  avatar: string;
   projectIds: Array<{
     id: string;
     userId: string;

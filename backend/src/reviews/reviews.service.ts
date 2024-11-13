@@ -1,4 +1,4 @@
-import { user } from './../interfaces/user';
+// import { user } from './../interfaces/user';
 import {
   BadRequestException,
   ForbiddenException,
@@ -33,6 +33,7 @@ export class ReviewsService {
       ...reviewDto,
       owner: typedUser._id,
       name: typedUser.name,
+      avatar: typedUser.avatar,
     });
     return newReview;
   }
@@ -46,6 +47,8 @@ export class ReviewsService {
       throw new BadRequestException(ErrorsApp.EMPTY_BODY);
     }
     const user = req.user;
+    const params = req.params;
+    console.log(params);
     if (!user || typeof user !== 'object' || !('_id' in user)) {
       throw new Error(ErrorsApp.EMPTY_USER);
     }
@@ -65,7 +68,7 @@ export class ReviewsService {
 
     return await this.ReviewsModel.findByIdAndUpdate(
       { owner: typedUser._id, _id: reviewId },
-      reviewDto,
+      { ...reviewDto, avatar: typedUser.avatar },
       { new: true, fields: ['-createdAt', '-updatedAt'] },
     );
   }
