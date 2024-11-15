@@ -144,12 +144,13 @@ export class UserService {
     if (!passwordMatch) {
       throw new UnauthorizedException(ErrorsApp.BAD_PASSWORD);
     }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     return await this.userModel.findByIdAndUpdate(
       typedUser._id,
       {
         $set: {
-          password: passwordMatch,
+          password: hashedPassword,
         },
       },
       { new: true },

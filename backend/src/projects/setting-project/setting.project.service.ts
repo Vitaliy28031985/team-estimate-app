@@ -48,6 +48,10 @@ export class SettingProjectService {
       '-createdAt -updatedAt',
     );
 
+    if (!project) {
+      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
+    }
+
     const currentUser = users.filter((user) => user.email === email);
 
     if (currentUser.length === 0) {
@@ -123,6 +127,10 @@ export class SettingProjectService {
       '-createdAt -updatedAt',
     );
 
+    if (!project) {
+      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
+    }
+
     const currentUser = users.filter((user) => user.email === email);
 
     if (currentUser.length === 0) {
@@ -183,6 +191,10 @@ export class SettingProjectService {
       { owner: typedUser._id, _id: projectId },
       '-createdAt -updatedAt',
     );
+
+    if (!project) {
+      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
+    }
 
     const currentUser = users.filter((user) => user.email === email);
 
