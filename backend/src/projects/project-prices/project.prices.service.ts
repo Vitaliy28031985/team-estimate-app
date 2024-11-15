@@ -26,6 +26,7 @@ export class ProjectPricesService {
     dto: PricesDto,
     @Param('projectId') projectId: Types.ObjectId,
   ) {
+    const newPriceId = new Types.ObjectId();
     const project = await this.projectModel.findById(
       projectId,
       '-createdAt -updatedAt',
@@ -41,7 +42,12 @@ export class ProjectPricesService {
     if (isEmptyPrice) {
       throw new ConflictException(ErrorsApp.EXIST_PRICE(dto.title));
     }
-    const newPrice = [...projectPrices, dto];
+    const newDto = {
+      id: newPriceId,
+      title: dto.title,
+      price: dto.price,
+    };
+    const newPrice = [...projectPrices, newDto];
 
     return await this.projectModel.findByIdAndUpdate(
       projectId,
