@@ -149,7 +149,7 @@ export class UserService {
       typedUser._id,
       {
         $set: {
-          password: newPassword,
+          password: passwordMatch,
         },
       },
       { new: true },

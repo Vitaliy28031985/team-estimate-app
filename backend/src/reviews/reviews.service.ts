@@ -16,6 +16,7 @@ import { ErrorsApp } from 'src/common/errors';
 interface UserGet {
   _id: string;
   name?: string;
+  avatar?: string;
 }
 
 @Injectable()
@@ -33,6 +34,7 @@ export class ReviewsService {
     const typedUser = user as unknown as UserGet;
     const newReview = await this.ReviewsModel.create({
       ...reviewDto,
+      avatar: typedUser.avatar,
       owner: typedUser._id,
       name: typedUser.name,
     });
@@ -64,7 +66,7 @@ export class ReviewsService {
 
     return await this.ReviewsModel.findByIdAndUpdate(
       { owner: typedUser._id, _id: reviewId },
-      reviewDto,
+      { ...reviewDto, avatar: typedUser.avatar },
       { new: true, fields: ['-createdAt', '-updatedAt'] },
     );
   }
@@ -75,7 +77,6 @@ export class ReviewsService {
   ): Promise<Review> {
     const user = req.user;
     const review = await this.ReviewsModel.findById(reviewId);
-    console.log(review);
     if (!review) {
       throw new NotFoundException(ErrorsApp.NOT_REVIEW);
     }

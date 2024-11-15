@@ -150,6 +150,7 @@ export class ProjectsService {
           materialsTotal: project.materialsTotal,
           advancesTotal: project.advancesTotal,
           general: project.general,
+          discount: project.discount,
           discountPercentage: project.discountPercentage,
         };
       }
@@ -188,6 +189,7 @@ export class ProjectsService {
           materialsTotal: project.materialsTotal,
           advancesTotal: project.advancesTotal,
           general: project.general,
+          discount: project.discount,
           discountPercentage: project.discountPercentage,
         };
       }
