@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException, Param, Req } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Param,
+  Req,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Project } from 'src/mongo/schemas/project/project.schema';
@@ -221,7 +227,17 @@ export class ProjectsService {
     if (!user || typeof user !== 'object' || !('_id' in user)) {
       throw new Error(ErrorsApp.EMPTY_USER);
     }
+
     const typedUser = user as unknown as UserGet;
+    const projects = await this.projectModel.find({ owner: typedUser._id });
+
+    const isEmptyProject = projects.some(
+      ({ title }) => title === projectDto.title,
+    );
+
+    if (isEmptyProject) {
+      throw new ConflictException(ErrorsApp.EXIST_PROJECT(projectDto.title));
+    }
     const prices = await this.priceModel.find({ owner: typedUser._id });
     const newProject = await this.projectModel.create({
       ...projectDto,
