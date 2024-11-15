@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
@@ -30,6 +35,13 @@ export class MaterialsService {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
     const materialList = project.materials;
+    const isEmptyMaterial = materialList.some(
+      ({ order }) => order === dto.order,
+    );
+
+    if (isEmptyMaterial) {
+      throw new ConflictException(ErrorsApp.EXIST_MATERIAL(dto.order));
+    }
 
     materialList.push({
       id: newId,

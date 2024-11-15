@@ -90,8 +90,11 @@ export class AuthService {
 
     const payload = { id: user._id };
     const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
+    const refreshToken = jwt.sign(payload, this.secretKey, {
+      expiresIn: '7d',
+    });
 
-    return { ...user.toObject(), token };
+    return { ...user.toObject(), token, refreshToken };
   }
 
   async loginWithGoogle(user: any) {
@@ -100,8 +103,13 @@ export class AuthService {
     }
     const payload = { id: user._id };
     const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
+    const refreshToken = jwt.sign(payload, this.secretKey, {
+      expiresIn: '7d',
+    });
 
-    await this.userModel.findByIdAndUpdate(user._id, { $set: { token } });
+    await this.userModel.findByIdAndUpdate(user._id, {
+      $set: { token, refreshToken },
+    });
 
     return {
       user: {

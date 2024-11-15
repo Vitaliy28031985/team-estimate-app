@@ -128,6 +128,21 @@ export class LowPositionService {
     }
     let allow: boolean = true;
     let allowPrice: number = null;
+    let allowTitle: string = '';
+    let allowPriceBig: number = null;
+
+    const prices: PriceInterfaceLow[] = project.prices;
+
+    if (prices.length !== 0) {
+      for (let i = 0; i < prices.length; i++) {
+        if (
+          prices[i].title.toLocaleLowerCase() === dto.title.toLocaleLowerCase()
+        ) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          allowPriceBig = prices[i].price;
+        }
+      }
+    }
 
     const lowPrices: PriceInterfaceLow[] = project.lowPrices;
     if (lowPrices.length !== 0) {
@@ -140,6 +155,7 @@ export class LowPositionService {
           allow = lowPrices[i].updateAllow;
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           allowPrice = lowPrices[i].price;
+          allowTitle = lowPrices[i].title;
         }
       }
     }
@@ -149,7 +165,7 @@ export class LowPositionService {
     const newPrice = dto.price + stateDiscountConvert;
 
     const positionNew = {
-      title: dto.title,
+      title: allow ? dto.title : allowTitle,
       unit: dto.unit,
       number: dto.number,
       price: allow ? dto.price : allowPrice,
@@ -160,10 +176,10 @@ export class LowPositionService {
     };
 
     const bigPosition = {
-      title: dto.title,
+      title: allow ? dto.title : allowTitle,
       unit: dto.unit,
       number: dto.number,
-      price: allow ? newPrice : allowPrice + project.lowDiscount * allowPrice,
+      price: allow ? newPrice : allowPriceBig,
     };
     const estimateList: EstimateInterface[] = project.lowEstimates;
 

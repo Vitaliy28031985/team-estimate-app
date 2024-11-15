@@ -47,6 +47,12 @@ export const ErrorsApp = {
   EXIST_PRICE(title: string): string {
     return `Позиція прайсу ${title} вже існує!`;
   },
+  EXIST_MATERIAL(title: string): string {
+    return `Чек з номером ${title} вже існує!`;
+  },
+  EXIST_PROJECT(title: string): string {
+    return `Проект з назвою ${title} вже існує!`;
+  },
   EXIST_POSITION(title: string): string {
     return `Позиція кошторису ${title} вже існує!`;
   },
