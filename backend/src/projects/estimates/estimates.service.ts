@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { EstimateInterface } from 'src/interfaces/estimate';
@@ -19,6 +24,23 @@ export class EstimatesService {
     @Param('projectId') projectId: Types.ObjectId,
   ): Promise<Project> {
     const newEstimateId = !dto.id ? new Types.ObjectId() : dto.id;
+    const project = await this.projectModel.findById(
+      projectId,
+      '-createdAt -updatedAt',
+    );
+
+    if (!project) {
+      throw new NotFoundException(ErrorsApp.NOT_PROJECT);
+    }
+    const estimates = project.estimates;
+    if (estimates.length !== 0) {
+      const isEmptyEstimate = estimates.some(
+        ({ title }) => title === dto.title,
+      );
+      if (isEmptyEstimate) {
+        throw new ConflictException(ErrorsApp.EXIST_ESTIMATE(dto.title));
+      }
+    }
     return await this.projectModel.findByIdAndUpdate(
       projectId,
       { $push: { estimates: { ...dto, id: newEstimateId } } },
