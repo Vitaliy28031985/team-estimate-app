@@ -55,6 +55,6 @@ export class ProjectGuard implements CanActivate {
       return false;
     }
 
-    return false;
+    return true;
   }
 }
