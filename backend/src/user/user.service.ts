@@ -24,6 +24,7 @@ import { Readable } from 'stream';
 import { UploadApiResponse } from 'cloudinary';
 import { MessageApp } from 'src/common/message';
 import { UserUpdateRoleDto } from './dtos/user.update.role.dto';
+import { UserUpdateName } from './dtos/user.update.name.dto';
 config();
 const { VERIFY_EMAIL_LINK } = process.env;
 
@@ -44,7 +45,7 @@ export class UserService {
     return await typedUser;
   }
 
-  async changeName(dto: { name: string }, @Req() req: RequestWithUser) {
+  async changeName(dto: UserUpdateName, @Req() req: RequestWithUser) {
     const user = req.user;
     if (!user || typeof user !== 'object' || !('_id' in user)) {
       throw new Error(ErrorsApp.NOT_AUTHORIZED);

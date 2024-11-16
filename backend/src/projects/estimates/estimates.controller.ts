@@ -12,6 +12,7 @@ import {
 import { EstimatesService } from './estimates.service';
 import { Types } from 'mongoose';
 import { ProjectGuard } from '../project/project.guard';
+import { EstimateDto } from './estimate.dto';
 
 @Controller('estimates')
 export class EstimatesController {
@@ -20,7 +21,7 @@ export class EstimatesController {
   @UsePipes(new ValidationPipe())
   @UseGuards(ProjectGuard)
   async create(
-    @Body() dto: { title: string },
+    @Body() dto: EstimateDto,
     @Param('projectId') projectId: string,
   ) {
     const objectId = new Types.ObjectId(projectId);
@@ -31,7 +32,7 @@ export class EstimatesController {
   @UsePipes(new ValidationPipe())
   @UseGuards(ProjectGuard)
   async update(
-    @Body() dto: { title: string },
+    @Body() dto: EstimateDto,
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,
   ) {

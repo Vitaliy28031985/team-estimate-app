@@ -10,6 +10,7 @@ import { ErrorsApp } from 'src/common/errors';
 import { MessageApp } from 'src/common/message';
 import { EstimateInterface } from 'src/interfaces/estimate';
 import { Project } from 'src/mongo/schemas/project/project.schema';
+import { EstimateDto } from 'src/projects/estimates/estimate.dto';
 import { EstimatesService } from 'src/projects/estimates/estimates.service';
 import { SettingProjectService } from 'src/projects/setting-project/setting.project.service';
 
@@ -22,7 +23,7 @@ export class LowEstimateService {
   ) {}
 
   async createLowEstimate(
-    dto: { title: string },
+    dto: EstimateDto,
     @Param('projectId') projectId: Types.ObjectId,
   ): Promise<Project> {
     const newEstimateId = new Types.ObjectId();
@@ -59,7 +60,7 @@ export class LowEstimateService {
   }
 
   async updateEstimated(
-    dto: { title: string },
+    dto: EstimateDto,
     @Param('projectId') projectId: Types.ObjectId,
     @Param('estimateId') estimateId: Types.ObjectId,
   ): Promise<Project> {

@@ -19,6 +19,7 @@ import { PositionsService } from '../positions/positions.service';
 import { EstimateInterface } from 'src/interfaces/estimate';
 import { Helpers } from '../positions/helpers';
 import { Price } from 'src/mongo/schemas/price.schema';
+import { DiscountDto } from './dto/discount.dto';
 
 @Injectable()
 export class SettingProjectService {
@@ -254,7 +255,7 @@ export class SettingProjectService {
   }
 
   async addDiscount(
-    dto: { discount: number },
+    dto: DiscountDto,
     @Param('projectId') projectId: Types.ObjectId,
   ) {
     const project = await this.projectModel.findById(
@@ -289,7 +290,7 @@ export class SettingProjectService {
   }
 
   async addLowEstimates(
-    dto: { discount: number },
+    dto: DiscountDto,
     @Param('projectId') projectId: Types.ObjectId,
     @Req() req: RequestWithUser,
   ) {

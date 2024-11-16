@@ -20,6 +20,7 @@ import { UserUpdatePassword } from './dtos/user.update.password.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ErrorsApp } from 'src/common/errors';
 import { UserUpdateRoleDto } from './dtos/user.update.role.dto';
+import { UserUpdateName } from './dtos/user.update.name.dto';
 
 @Controller('user')
 export class UserController {
@@ -31,7 +32,7 @@ export class UserController {
   }
 
   @Put('name')
-  async changeName(@Body() dto: { name: string }, @Req() req: RequestWithUser) {
+  async changeName(@Body() dto: UserUpdateName, @Req() req: RequestWithUser) {
     return await this.userService.changeName(dto, req);
   }
 

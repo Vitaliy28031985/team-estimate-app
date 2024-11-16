@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
-export class PricesDto {
+export class EstimateDto {
   @ApiProperty({
     type: Types.ObjectId,
     required: false,
@@ -19,17 +19,4 @@ export class PricesDto {
   })
   @IsString()
   title: string;
-
-  @ApiProperty({
-    type: Number,
-  })
-  @IsNumber({}, { message: 'price має бути числом' })
-  price: number;
-
-  @ApiProperty({
-    type: Boolean,
-  })
-  @IsOptional()
-  @IsBoolean()
-  updateAllow?: boolean;
 }

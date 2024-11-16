@@ -13,6 +13,7 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { Types } from 'mongoose';
 import { DeleteAllowDto } from './dto/delete.dto';
 import { ProjectGuard } from '../project/project.guard';
+import { DiscountDto } from './dto/discount.dto';
 
 @Controller('setting/project')
 export class SettingProjectController {
@@ -64,7 +65,7 @@ export class SettingProjectController {
   @Post('/discount/:projectId')
   @UseGuards(ProjectGuard)
   async addDiscount(
-    @Body() dto: { discount: number },
+    @Body() dto: DiscountDto,
     @Param('projectId') projectId: string,
   ) {
     const objectId = new Types.ObjectId(projectId);
@@ -74,7 +75,7 @@ export class SettingProjectController {
   @Post('/lowEstimates/:projectId')
   @UseGuards(ProjectGuard)
   async addLowEstimates(
-    @Body() dto: { discount: number },
+    @Body() dto: DiscountDto,
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
   ) {
