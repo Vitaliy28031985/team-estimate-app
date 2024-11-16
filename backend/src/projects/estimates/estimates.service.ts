@@ -11,6 +11,7 @@ import { Project } from 'src/mongo/schemas/project/project.schema';
 import { PositionsService } from '../positions/positions.service';
 import { ErrorsApp } from 'src/common/errors';
 import { MessageApp } from 'src/common/message';
+import { EstimateDto } from './estimate.dto';
 
 @Injectable()
 export class EstimatesService {
@@ -20,7 +21,7 @@ export class EstimatesService {
   ) {}
 
   async createEstimate(
-    dto: { title: string; id?: Types.ObjectId },
+    dto: EstimateDto,
     @Param('projectId') projectId: Types.ObjectId,
   ): Promise<Project> {
     const newEstimateId = !dto.id ? new Types.ObjectId() : dto.id;
@@ -48,7 +49,7 @@ export class EstimatesService {
     );
   }
   async updateEstimated(
-    dto: { title: string },
+    dto: EstimateDto,
     @Param('projectId') projectId: Types.ObjectId,
     @Param('estimateId') estimateId: Types.ObjectId,
   ): Promise<Project> {
