@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -15,6 +16,8 @@ import { ReviewDto, ReviewUpdateDto } from './review.dto';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { Review } from 'src/mongo/schemas/reviews.schema';
 import { Types } from 'mongoose';
+import { Helpers } from 'src/projects/positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('reviews')
 export class ReviewsController {
@@ -40,6 +43,9 @@ export class ReviewsController {
     @Body() reviewUpdateDto: ReviewUpdateDto,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(reviewId.toString())) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     return await this.reviewsService.update(reviewId, reviewUpdateDto, req);
   }
 
@@ -48,6 +54,9 @@ export class ReviewsController {
     @Param('reviewId') reviewId: Types.ObjectId,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(reviewId.toString())) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     return this.reviewsService.deleteReview(reviewId, req);
   }
 }

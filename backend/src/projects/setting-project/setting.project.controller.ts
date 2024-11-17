@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -14,6 +15,8 @@ import { Types } from 'mongoose';
 import { DeleteAllowDto } from './dto/delete.dto';
 import { ProjectGuard } from '../project/project.guard';
 import { DiscountDto } from './dto/discount.dto';
+import { Helpers } from '../positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('setting/project')
 export class SettingProjectController {
@@ -25,6 +28,9 @@ export class SettingProjectController {
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.settingProjectService.addAllowProject(
       allowDto,
@@ -40,6 +46,9 @@ export class SettingProjectController {
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.settingProjectService.updateProjectAllow(
       allowDto,
@@ -55,6 +64,9 @@ export class SettingProjectController {
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.settingProjectService.deleteAllowProject(
       allowDto,
@@ -68,6 +80,9 @@ export class SettingProjectController {
     @Body() dto: DiscountDto,
     @Param('projectId') projectId: string,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.settingProjectService.addDiscount(dto, objectId);
   }
@@ -79,6 +94,9 @@ export class SettingProjectController {
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.settingProjectService.addLowEstimates(dto, objectId, req);
   }

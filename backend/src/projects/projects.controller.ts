@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -20,6 +21,8 @@ import { Types } from 'mongoose';
 import { CreateProjectGuard } from './project/create.project.guard.guard';
 import { ProjectGuard } from './project/project.guard';
 import { ProjectDeleteGuard } from './project/project.delete.guard';
+import { Helpers } from './positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('projects')
 export class ProjectsController {
@@ -39,6 +42,9 @@ export class ProjectsController {
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.projectsService.getById(objectId, req);
   }
@@ -61,6 +67,9 @@ export class ProjectsController {
     @Body() projectDto: CreateProjectDto,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return this.projectsService.update(objectId, projectDto, req);
   }
@@ -71,6 +80,9 @@ export class ProjectsController {
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return this.projectsService.remove(objectId, req);
   }

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -13,6 +14,8 @@ import { ProjectPricesService } from './project.prices.service';
 import { PricesDto } from 'src/prices/price.dto';
 import { Types } from 'mongoose';
 import { ProjectGuard } from '../project/project.guard';
+import { Helpers } from '../positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('project/prices')
 export class ProjectPricesController {
@@ -22,6 +25,9 @@ export class ProjectPricesController {
   @UsePipes(new ValidationPipe())
   @UseGuards(ProjectGuard)
   async create(@Body() dto: PricesDto, @Param('projectId') projectId: string) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.projectPricesService.createPrice(dto, objectId);
   }
@@ -34,6 +40,9 @@ export class ProjectPricesController {
     @Param('projectId') projectId: string,
     @Param('priceId') priceId: string,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.projectPricesService.updatePrice(dto, objectId, priceId);
   }
@@ -44,6 +53,9 @@ export class ProjectPricesController {
     @Param('projectId') projectId: string,
     @Param('priceId') priceId: string,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.projectPricesService.removePrice(objectId, priceId);
   }

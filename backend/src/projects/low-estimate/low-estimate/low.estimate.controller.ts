@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -13,6 +14,8 @@ import { LowEstimateService } from './low.estimate.service';
 import { ProjectGuard } from 'src/projects/project/project.guard';
 import { Types } from 'mongoose';
 import { EstimateDto } from 'src/projects/estimates/estimate.dto';
+import { Helpers } from 'src/projects/positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('low/estimate')
 export class LowEstimateController {
@@ -25,6 +28,9 @@ export class LowEstimateController {
     @Body() dto: EstimateDto,
     @Param('projectId') projectId: string,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.lowEstimateService.createLowEstimate(dto, objectId);
   }
@@ -37,6 +43,10 @@ export class LowEstimateController {
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
+
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.lowEstimateService.updateEstimated(
@@ -53,6 +63,9 @@ export class LowEstimateController {
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.lowEstimateService.removeEstimateLow(

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -13,6 +14,8 @@ import { LowPositionService } from './low.position.service';
 import { ProjectGuard } from 'src/projects/project/project.guard';
 import { CreatePositionDto } from 'src/projects/positions/position-dto/position.create.dto';
 import { Types } from 'mongoose';
+import { Helpers } from 'src/projects/positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('low/position')
 export class LowPositionController {
@@ -26,6 +29,9 @@ export class LowPositionController {
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.lowPositionService.createPosition(
@@ -44,6 +50,9 @@ export class LowPositionController {
     @Param('estimateId') estimateId: string,
     @Param('positionId') positionId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     await this.lowPositionService.updatePosition(
@@ -61,6 +70,9 @@ export class LowPositionController {
     @Param('estimateId') estimateId: string,
     @Param('positionId') positionId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.lowPositionService.removePosition(

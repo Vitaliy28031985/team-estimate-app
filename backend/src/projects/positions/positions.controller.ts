@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -13,6 +14,8 @@ import { PositionsService } from './positions.service';
 import { ProjectGuard } from '../project/project.guard';
 import { CreatePositionDto } from './position-dto/position.create.dto';
 import { Types } from 'mongoose';
+import { ErrorsApp } from 'src/common/errors';
+import { Helpers } from './helpers';
 
 @Controller('positions')
 export class PositionsController {
@@ -26,6 +29,9 @@ export class PositionsController {
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.positionsService.createPosition(
@@ -44,6 +50,9 @@ export class PositionsController {
     @Param('estimateId') estimateId: string,
     @Param('positionId') positionId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     await this.positionsService.updatePosition(
@@ -61,6 +70,9 @@ export class PositionsController {
     @Param('estimateId') estimateId: string,
     @Param('positionId') positionId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.positionsService.removePosition(

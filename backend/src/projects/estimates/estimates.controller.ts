@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -13,6 +14,8 @@ import { EstimatesService } from './estimates.service';
 import { Types } from 'mongoose';
 import { ProjectGuard } from '../project/project.guard';
 import { EstimateDto } from './estimate.dto';
+import { Helpers } from '../positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('estimates')
 export class EstimatesController {
@@ -24,6 +27,9 @@ export class EstimatesController {
     @Body() dto: EstimateDto,
     @Param('projectId') projectId: string,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.estimatesService.createEstimate(dto, objectId);
   }
@@ -36,6 +42,9 @@ export class EstimatesController {
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.estimatesService.updateEstimated(
@@ -51,6 +60,9 @@ export class EstimatesController {
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,
   ) {
+    if (!Helpers.checkId(projectId) || !Helpers.checkId(estimateId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectProjectId = new Types.ObjectId(projectId);
     const objectEstimatedId = new Types.ObjectId(estimateId);
     return await this.estimatesService.removeEstimate(
