@@ -2,12 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreatePositionDto {
-  @ApiProperty({
-    type: String,
-    required: false,
-    description:
-      'В тілі запиту не потрібно подавати. Якщо така id потрібна backend її створить самостійно!',
-  })
   @IsOptional()
   @IsString()
   id?: string;
