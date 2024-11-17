@@ -11,11 +11,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { PositionsService } from './positions.service';
-import { ProjectGuard } from '../project/project.guard';
 import { CreatePositionDto } from './position-dto/position.create.dto';
 import { Types } from 'mongoose';
 import { ErrorsApp } from 'src/common/errors';
 import { Helpers } from './helpers';
+import { ProjectLargeGuard } from '../project/project.large.guard';
 
 @Controller('positions')
 export class PositionsController {
@@ -23,7 +23,7 @@ export class PositionsController {
 
   @Post('/:projectId/:estimateId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async create(
     @Body() dto: CreatePositionDto,
     @Param('projectId') projectId: string,
@@ -43,7 +43,7 @@ export class PositionsController {
 
   @Patch(':projectId/:estimateId/:positionId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async update(
     @Body() dto: CreatePositionDto,
     @Param('projectId') projectId: string,
@@ -64,7 +64,7 @@ export class PositionsController {
   }
 
   @Delete(':projectId/:estimateId/:positionId')
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async remove(
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,

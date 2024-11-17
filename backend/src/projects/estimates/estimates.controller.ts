@@ -12,17 +12,17 @@ import {
 } from '@nestjs/common';
 import { EstimatesService } from './estimates.service';
 import { Types } from 'mongoose';
-import { ProjectGuard } from '../project/project.guard';
 import { EstimateDto } from './estimate.dto';
 import { Helpers } from '../positions/helpers';
 import { ErrorsApp } from 'src/common/errors';
+import { ProjectLargeGuard } from '../project/project.large.guard';
 
 @Controller('estimates')
 export class EstimatesController {
   constructor(private readonly estimatesService: EstimatesService) {}
   @Post(':projectId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async create(
     @Body() dto: EstimateDto,
     @Param('projectId') projectId: string,
@@ -36,7 +36,7 @@ export class EstimatesController {
 
   @Patch('/:projectId/:estimateId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async update(
     @Body() dto: EstimateDto,
     @Param('projectId') projectId: string,
@@ -55,7 +55,7 @@ export class EstimatesController {
   }
   @Delete('/:projectId/:estimateId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async remove(
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,

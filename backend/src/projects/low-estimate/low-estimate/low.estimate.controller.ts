@@ -11,11 +11,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { LowEstimateService } from './low.estimate.service';
-import { ProjectGuard } from 'src/projects/project/project.guard';
 import { Types } from 'mongoose';
 import { EstimateDto } from 'src/projects/estimates/estimate.dto';
 import { Helpers } from 'src/projects/positions/helpers';
 import { ErrorsApp } from 'src/common/errors';
+import { ProjectLowGuard } from 'src/projects/project/project.low.guard';
 
 @Controller('low/estimate')
 export class LowEstimateController {
@@ -23,7 +23,7 @@ export class LowEstimateController {
 
   @Post(':projectId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLowGuard)
   async create(
     @Body() dto: EstimateDto,
     @Param('projectId') projectId: string,
@@ -37,7 +37,7 @@ export class LowEstimateController {
 
   @Patch('/:projectId/:estimateId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLowGuard)
   async update(
     @Body() dto: EstimateDto,
     @Param('projectId') projectId: string,
@@ -58,7 +58,7 @@ export class LowEstimateController {
 
   @Delete('/:projectId/:estimateId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLowGuard)
   async remove(
     @Param('projectId') projectId: string,
     @Param('estimateId') estimateId: string,

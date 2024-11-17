@@ -13,9 +13,9 @@ import {
 import { ProjectPricesService } from './project.prices.service';
 import { PricesDto } from 'src/prices/price.dto';
 import { Types } from 'mongoose';
-import { ProjectGuard } from '../project/project.guard';
 import { Helpers } from '../positions/helpers';
 import { ErrorsApp } from 'src/common/errors';
+import { ProjectLargeGuard } from '../project/project.large.guard';
 
 @Controller('project/prices')
 export class ProjectPricesController {
@@ -23,7 +23,7 @@ export class ProjectPricesController {
 
   @Post('/:projectId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async create(@Body() dto: PricesDto, @Param('projectId') projectId: string) {
     if (!Helpers.checkId(projectId)) {
       throw new NotFoundException(ErrorsApp.BED_ID);
@@ -34,7 +34,7 @@ export class ProjectPricesController {
 
   @Patch('/:projectId/:priceId')
   @UsePipes(new ValidationPipe())
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async update(
     @Body() dto: PricesDto,
     @Param('projectId') projectId: string,
@@ -48,7 +48,7 @@ export class ProjectPricesController {
   }
 
   @Delete('/:projectId/:priceId')
-  @UseGuards(ProjectGuard)
+  @UseGuards(ProjectLargeGuard)
   async remove(
     @Param('projectId') projectId: string,
     @Param('priceId') priceId: string,
