@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -13,6 +14,8 @@ import { MaterialsService } from './materials.service';
 import { ProjectGuard } from '../project/project.guard';
 import { MaterialDto } from './material.dto';
 import { Types } from 'mongoose';
+import { Helpers } from '../positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('materials')
 export class MaterialsController {
@@ -25,6 +28,9 @@ export class MaterialsController {
     @Body() dto: MaterialDto,
     @Param('projectId') projectId: string,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     return await this.materialsService.createMaterial(dto, objectId);
   }
@@ -37,6 +43,9 @@ export class MaterialsController {
     @Param('projectId') projectId: string,
     @Param('materialsId') materialsId: string,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     await this.materialsService.updateMaterial(dto, objectId, materialsId);
   }
@@ -47,6 +56,9 @@ export class MaterialsController {
     @Param('projectId') projectId: string,
     @Param('materialsId') materialsId: string,
   ) {
+    if (!Helpers.checkId(projectId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(projectId);
     await this.materialsService.remove(objectId, materialsId);
   }

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Req,
@@ -16,6 +17,8 @@ import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { UnitsDto } from './units.dto';
 import { Unit } from 'src/mongo/schemas/units.schema';
 import { Types } from 'mongoose';
+import { Helpers } from 'src/projects/positions/helpers';
+import { ErrorsApp } from 'src/common/errors';
 
 @Controller('units')
 export class UnitsController {
@@ -38,6 +41,9 @@ export class UnitsController {
   }
   @Delete(':unitId')
   async remove(@Param('unitId') priceId: string, @Req() req: RequestWithUser) {
+    if (!Helpers.checkId(priceId)) {
+      throw new NotFoundException(ErrorsApp.BED_ID);
+    }
     const objectId = new Types.ObjectId(priceId);
     return this.unitsService.remove(objectId, req);
   }

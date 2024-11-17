@@ -34,4 +34,8 @@ export const Helpers = {
     }, 0);
     return sum;
   },
+  checkId(id: string): boolean {
+    const isValidObjectId = /^[a-f0-9]{24}$/.test(id);
+    return isValidObjectId ? true : false;
+  },
 };
