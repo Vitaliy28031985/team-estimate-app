@@ -2,10 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const { PORT } = process.env;
+const { PORT, CORS_LINK } = process.env;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: CORS_LINK,
+    methods: 'GET,POST,PUT, PATCH, DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+  });
   app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('Estimate app')
