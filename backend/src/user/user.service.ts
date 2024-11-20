@@ -35,6 +35,11 @@ export class UserService {
     private readonly emailService: EmailService,
   ) {}
 
+  async getAllUsers() {
+    const allUsers = await this.userModel.find();
+    return allUsers;
+  }
+
   async getCurrentUser(@Req() req: RequestWithUser) {
     const user = req.user;
     if (!user || typeof user !== 'object' || !('_id' in user)) {

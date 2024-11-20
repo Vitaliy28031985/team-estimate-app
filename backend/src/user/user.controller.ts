@@ -26,6 +26,11 @@ import { UserUpdateName } from './dtos/user.update.name.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get()
+  async getAllUsers() {
+    return await this.userService.getAllUsers();
+  }
+
   @Get('current')
   async currentUser(@Req() req: RequestWithUser) {
     return await this.userService.getCurrentUser(req);
