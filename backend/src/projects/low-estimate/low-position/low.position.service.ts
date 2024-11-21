@@ -45,6 +45,35 @@ export class LowPositionService {
       throw new NotFoundException(ErrorsApp.NOT_LOW_ESTIMATES);
     }
 
+    let allow: boolean = true;
+    let allowPriceBig: number = null;
+
+    const prices: PriceInterfaceLow[] = project.prices;
+
+    if (prices.length !== 0) {
+      for (let i = 0; i < prices.length; i++) {
+        if (
+          prices[i].title.toLocaleLowerCase() === dto.title.toLocaleLowerCase()
+        ) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          allowPriceBig = prices[i].price;
+        }
+      }
+    }
+
+    const lowPrices: PriceInterfaceLow[] = project.lowPrices;
+    if (lowPrices.length !== 0) {
+      for (let i = 0; i < lowPrices.length; i++) {
+        if (
+          lowPrices[i].title.toLocaleLowerCase() ===
+          dto.title.toLocaleLowerCase()
+        ) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          allow = lowPrices[i].updateAllow;
+        }
+      }
+    }
+
     const newId = uuidv4();
     let totalPositions = null;
     const positionNew = {
@@ -65,7 +94,7 @@ export class LowPositionService {
       title: dto.title,
       unit: dto.unit,
       number: dto.number,
-      price: newPrice,
+      price: allow ? newPrice : allowPriceBig,
     };
 
     const estimateList: EstimateInterface[] = project.lowEstimates;
