@@ -26,7 +26,8 @@ export class ProjectPricesService {
     dto: PricesDto,
     @Param('projectId') projectId: Types.ObjectId,
   ) {
-    const newPriceId = new Types.ObjectId();
+    const newPriceId = !dto.id ? new Types.ObjectId() : dto.id;
+
     const project = await this.projectModel.findById(
       projectId,
       '-createdAt -updatedAt',
