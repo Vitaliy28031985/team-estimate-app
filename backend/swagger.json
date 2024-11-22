@@ -1,0 +1,2154 @@
+{
+"openapi": "3.0.0",
+"paths": {
+"/api/auth/register": {
+"post": {
+"operationId": "AuthController_register",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthCreateDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/auth/verify/{verificationToken}": {
+"get": {
+"operationId": "AuthController_verifyUser",
+"parameters": [
+{
+"name": "verificationToken",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/auth/google": {
+"get": {
+"operationId": "AuthController_googleAuth",
+"parameters": [],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/auth/google/redirect": {
+"get": {
+"operationId": "AuthController_googleAuthRedirect",
+"parameters": [],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/auth/login": {
+"post": {
+"operationId": "AuthController_login",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AuthLoginDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/auth/refresh/current": {
+"get": {
+"operationId": "AuthController_RefreshToken",
+"parameters": [],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/auth/logout": {
+"post": {
+"operationId": "AuthController_logout",
+"parameters": [],
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/auth/send/verify": {
+"post": {
+"operationId": "AuthController_sendVerifyCode",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UserUpdateEmailDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/auth/verify": {
+"post": {
+"operationId": "AuthController_verifyCode",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/VerifyCodeDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Auth"
+]
+}
+},
+"/api/projects": {
+"get": {
+"operationId": "ProjectsController_getAll",
+"parameters": [
+{
+"name": "page",
+"required": true,
+"in": "query",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "limit",
+"required": true,
+"in": "query",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Projects"
+]
+},
+"post": {
+"operationId": "ProjectsController_create",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreateProjectDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Projects"
+]
+}
+},
+"/api/projects/{projectId}": {
+"get": {
+"operationId": "ProjectsController_getById",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Projects"
+]
+},
+"put": {
+"operationId": "ProjectsController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreateProjectDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Projects"
+]
+},
+"delete": {
+"operationId": "ProjectsController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Projects"
+]
+}
+},
+"/api/units": {
+"get": {
+"operationId": "UnitsController_getAll",
+"parameters": [],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Units"
+]
+},
+"post": {
+"operationId": "UnitsController_create",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UnitsDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Units"
+]
+}
+},
+"/api/units/{unitId}": {
+"delete": {
+"operationId": "UnitsController_remove",
+"parameters": [
+{
+"name": "unitId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Units"
+]
+}
+},
+"/api/prices": {
+"get": {
+"operationId": "PricesController_getAll",
+"parameters": [],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Prices"
+]
+},
+"post": {
+"operationId": "PricesController_create",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PricesDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Prices"
+]
+}
+},
+"/api/prices/{priceId}": {
+"put": {
+"operationId": "PricesController_update",
+"parameters": [
+{
+"name": "priceId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PricesDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Prices"
+]
+},
+"delete": {
+"operationId": "PricesController_remove",
+"parameters": [
+{
+"name": "priceId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Prices"
+]
+}
+},
+"/api/setting/project/add/{projectId}": {
+"patch": {
+"operationId": "SettingProjectController_addAllowProject",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AddAllowDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"SettingProject"
+]
+}
+},
+"/api/setting/project/update/{projectId}": {
+"patch": {
+"operationId": "SettingProjectController_updateAllowProject",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AddAllowDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"SettingProject"
+]
+}
+},
+"/api/setting/project/delete/{projectId}": {
+"patch": {
+"operationId": "SettingProjectController_deleteAllowProject",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/DeleteAllowDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"SettingProject"
+]
+}
+},
+"/api/setting/project/discount/{projectId}": {
+"post": {
+"operationId": "SettingProjectController_addDiscount",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/DiscountDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"SettingProject"
+]
+}
+},
+"/api/setting/project/lowEstimates/{projectId}": {
+"post": {
+"operationId": "SettingProjectController_addLowEstimates",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/DiscountDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"SettingProject"
+]
+}
+},
+"/api/estimates/{projectId}": {
+"post": {
+"operationId": "EstimatesController_create",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/EstimateDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Estimates"
+]
+}
+},
+"/api/estimates/{projectId}/{estimateId}": {
+"patch": {
+"operationId": "EstimatesController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/EstimateDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Estimates"
+]
+},
+"delete": {
+"operationId": "EstimatesController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Estimates"
+]
+}
+},
+"/api/positions/{projectId}/{estimateId}": {
+"post": {
+"operationId": "PositionsController_create",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreatePositionDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Positions"
+]
+}
+},
+"/api/positions/{projectId}/{estimateId}/{positionId}": {
+"patch": {
+"operationId": "PositionsController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "positionId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreatePositionDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Positions"
+]
+},
+"delete": {
+"operationId": "PositionsController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "positionId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Positions"
+]
+}
+},
+"/api/materials/{projectId}": {
+"post": {
+"operationId": "MaterialsController_create",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/MaterialDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Materials"
+]
+}
+},
+"/api/materials/{projectId}/{materialsId}": {
+"patch": {
+"operationId": "MaterialsController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "materialsId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/MaterialDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Materials"
+]
+},
+"delete": {
+"operationId": "MaterialsController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "materialsId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Materials"
+]
+}
+},
+"/api/advances/{projectId}": {
+"post": {
+"operationId": "AdvancesController_create",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AdvanceDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Advances"
+]
+}
+},
+"/api/advances/{projectId}/{advancesId}": {
+"patch": {
+"operationId": "AdvancesController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "advancesId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/AdvanceDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Advances"
+]
+},
+"delete": {
+"operationId": "AdvancesController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "advancesId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Advances"
+]
+}
+},
+"/api/project/prices/{projectId}": {
+"post": {
+"operationId": "ProjectPricesController_create",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PricesDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"ProjectPrices"
+]
+}
+},
+"/api/project/prices/{projectId}/{priceId}": {
+"patch": {
+"operationId": "ProjectPricesController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "priceId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PricesDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"ProjectPrices"
+]
+},
+"delete": {
+"operationId": "ProjectPricesController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "priceId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"ProjectPrices"
+]
+}
+},
+"/api/low/estimate/{projectId}": {
+"post": {
+"operationId": "LowEstimateController_create",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/EstimateDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"LowEstimate"
+]
+}
+},
+"/api/low/estimate/{projectId}/{estimateId}": {
+"patch": {
+"operationId": "LowEstimateController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/EstimateDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"LowEstimate"
+]
+},
+"delete": {
+"operationId": "LowEstimateController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"LowEstimate"
+]
+}
+},
+"/api/low/position/{projectId}/{estimateId}": {
+"post": {
+"operationId": "LowPositionController_create",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreatePositionDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"LowPosition"
+]
+}
+},
+"/api/low/position/{projectId}/{estimateId}/{positionId}": {
+"patch": {
+"operationId": "LowPositionController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "positionId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/CreatePositionDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"LowPosition"
+]
+},
+"delete": {
+"operationId": "LowPositionController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "estimateId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "positionId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"LowPosition"
+]
+}
+},
+"/api/reviews": {
+"get": {
+"operationId": "ReviewsController_getAllReviews",
+"parameters": [],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Reviews"
+]
+}
+},
+"/api/reviews/create": {
+"post": {
+"operationId": "ReviewsController_createReview",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/ReviewDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"Reviews"
+]
+}
+},
+"/api/reviews/{reviewId}": {
+"put": {
+"operationId": "ReviewsController_updateReview",
+"parameters": [
+{
+"name": "reviewId",
+"required": true,
+"in": "path",
+"schema": {
+"$ref": "#/components/schemas/ObjectId"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/ReviewUpdateDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Reviews"
+]
+},
+"delete": {
+"operationId": "ReviewsController_delete",
+"parameters": [
+{
+"name": "reviewId",
+"required": true,
+"in": "path",
+"schema": {
+"$ref": "#/components/schemas/ObjectId"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"Reviews"
+]
+}
+},
+"/api/low/project/price/{projectId}": {
+"post": {
+"operationId": "LowProjectPriceController_create",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PricesDto"
+}
+}
+}
+},
+"responses": {
+"201": {
+"description": ""
+}
+},
+"tags": [
+"LowProjectPrice"
+]
+}
+},
+"/api/low/project/price/{projectId}/{priceId}": {
+"patch": {
+"operationId": "LowProjectPriceController_update",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "priceId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/PricesDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"LowProjectPrice"
+]
+},
+"delete": {
+"operationId": "LowProjectPriceController_remove",
+"parameters": [
+{
+"name": "projectId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+},
+{
+"name": "priceId",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"LowProjectPrice"
+]
+}
+},
+"/api/user/current": {
+"get": {
+"operationId": "UserController_currentUser",
+"parameters": [],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"User"
+]
+}
+},
+"/api/user/name": {
+"put": {
+"operationId": "UserController_changeName",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UserUpdateName"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"User"
+]
+}
+},
+"/api/user/email": {
+"put": {
+"operationId": "UserController_changeEmail",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UserUpdateEmailDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"User"
+]
+}
+},
+"/api/user/verify/{verificationToken}": {
+"get": {
+"operationId": "UserController_verifyUser",
+"parameters": [
+{
+"name": "verificationToken",
+"required": true,
+"in": "path",
+"schema": {
+"type": "string"
+}
+}
+],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"User"
+]
+}
+},
+"/api/user/phone": {
+"put": {
+"operationId": "UserController_changePhone",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UserUpdatePhone"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"User"
+]
+}
+},
+"/api/user/role": {
+"put": {
+"operationId": "UserController_changeRole",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UserUpdateRoleDto"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"User"
+]
+}
+},
+"/api/user/password": {
+"put": {
+"operationId": "UserController_changePassword",
+"parameters": [],
+"requestBody": {
+"required": true,
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/UserUpdatePassword"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"User"
+]
+}
+},
+"/api/user/avatar": {
+"put": {
+"operationId": "UserController_changeAvatar",
+"parameters": [],
+"responses": {
+"200": {
+"description": ""
+}
+},
+"tags": [
+"User"
+]
+}
+}
+},
+"info": {
+"title": "Estimate app",
+"description": "api for estimate app",
+"version": "1.0",
+"contact": {}
+},
+"tags": [
+{
+"name": "estimate",
+"description": ""
+}
+],
+"servers": [],
+"components": {
+"schemas": {
+"AuthCreateDto": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string"
+},
+"email": {
+"type": "string"
+},
+"phone": {
+"type": "string"
+},
+"password": {
+"type": "string",
+"description": "Пароль має містити принаймні 6 символів та в його складі має бути принаймні одна літера та один спеціальний символ (*, #, & тощо)!"
+},
+"avatar": {
+"type": "string"
+},
+"role": {
+"type": "string",
+"enum": [
+"executor",
+"customer",
+"admin"
+]
+}
+},
+"required": [
+"name",
+"email",
+"phone",
+"password",
+"avatar",
+"role"
+]
+},
+"AuthLoginDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string"
+},
+"password": {
+"type": "string"
+}
+},
+"required": [
+"email",
+"password"
+]
+},
+"UserUpdateEmailDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string"
+}
+},
+"required": [
+"email"
+]
+},
+"VerifyCodeDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string"
+},
+"password": {
+"type": "string",
+"description": "Пароль має містити принаймні 6 символів та в його складі має бути принаймні одна літера та один спеціальний символ (*, #, & тощо)!"
+},
+"code": {
+"type": "number"
+}
+},
+"required": [
+"email",
+"password",
+"code"
+]
+},
+"CreateProjectDto": {
+"type": "object",
+"properties": {
+"title": {
+"type": "string"
+},
+"description": {
+"type": "string"
+}
+},
+"required": [
+"title",
+"description"
+]
+},
+"UnitsDto": {
+"type": "object",
+"properties": {
+"title": {
+"type": "string",
+"description": "unit of work"
+}
+},
+"required": [
+"title"
+]
+},
+"ObjectId": {
+"type": "object",
+"properties": {}
+},
+"PricesDto": {
+"type": "object",
+"properties": {
+"id": {
+"description": "В тілі запиту не потрібно подавати. Якщо така id потрібна backend її створить самостійно!",
+"allOf": [
+{
+"$ref": "#/components/schemas/ObjectId"
+}
+]
+},
+"title": {
+"type": "string"
+},
+"price": {
+"type": "number"
+},
+"updateAllow": {
+"type": "boolean"
+}
+},
+"required": [
+"title",
+"price",
+"updateAllow"
+]
+},
+"AddAllowDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string"
+},
+"allowLevel": {
+"type": "string",
+"enum": [
+"read",
+"write"
+]
+},
+"lookAt": {
+"type": "string",
+"enum": [
+"large",
+"small",
+"all"
+]
+},
+"lookAtTotals": {
+"type": "string",
+"enum": [
+"show",
+"notShow"
+]
+}
+},
+"required": [
+"email",
+"allowLevel",
+"lookAt",
+"lookAtTotals"
+]
+},
+"DeleteAllowDto": {
+"type": "object",
+"properties": {
+"email": {
+"type": "string"
+}
+},
+"required": [
+"email"
+]
+},
+"DiscountDto": {
+"type": "object",
+"properties": {
+"discount": {
+"type": "number"
+}
+},
+"required": [
+"discount"
+]
+},
+"EstimateDto": {
+"type": "object",
+"properties": {
+"id": {
+"description": "В тілі запиту не потрібно подавати. Якщо така id потрібна backend її створить самостійно!",
+"allOf": [
+{
+"$ref": "#/components/schemas/ObjectId"
+}
+]
+},
+"title": {
+"type": "string"
+}
+},
+"required": [
+"title"
+]
+},
+"CreatePositionDto": {
+"type": "object",
+"properties": {
+"id": {
+"type": "string",
+"description": "В тілі запиту не потрібно подавати. Якщо така id потрібна backend її створить самостійно!"
+},
+"title": {
+"type": "string"
+},
+"unit": {
+"type": "string"
+},
+"number": {
+"type": "number"
+},
+"price": {
+"type": "number"
+}
+},
+"required": [
+"title",
+"unit",
+"number",
+"price"
+]
+},
+"MaterialDto": {
+"type": "object",
+"properties": {
+"title": {
+"type": "string"
+},
+"order": {
+"type": "string"
+},
+"date": {
+"type": "string"
+},
+"sum": {
+"type": "number"
+}
+},
+"required": [
+"title",
+"order",
+"date",
+"sum"
+]
+},
+"AdvanceDto": {
+"type": "object",
+"properties": {
+"comment": {
+"type": "string"
+},
+"date": {
+"type": "string"
+},
+"sum": {
+"type": "number"
+}
+},
+"required": [
+"comment",
+"date",
+"sum"
+]
+},
+"ReviewDto": {
+"type": "object",
+"properties": {
+"comment": {
+"type": "string",
+"description": "comment for app"
+},
+"rating": {
+"type": "number",
+"description": "The rating",
+"minimum": 1,
+"maximum": 5
+}
+},
+"required": [
+"comment",
+"rating"
+]
+},
+"ReviewUpdateDto": {
+"type": "object",
+"properties": {
+"comment": {
+"type": "string",
+"description": "comment for app"
+},
+"rating": {
+"type": "number",
+"description": "The rating",
+"minimum": 1,
+"maximum": 5
+}
+},
+"required": [
+"comment",
+"rating"
+]
+},
+"UserUpdateName": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string"
+}
+},
+"required": [
+"name"
+]
+},
+"UserUpdatePhone": {
+"type": "object",
+"properties": {
+"phone": {
+"type": "string"
+}
+},
+"required": [
+"phone"
+]
+},
+"UserUpdateRoleDto": {
+"type": "object",
+"properties": {
+"role": {
+"type": "string",
+"enum": [
+"executor",
+"customer",
+"admin"
+]
+}
+},
+"required": [
+"role"
+]
+},
+"UserUpdatePassword": {
+"type": "object",
+"properties": {
+"oldPassword": {
+"type": "string",
+"description": "Пароль має містити принаймні 6 символів та в його складі має бути принаймні одна літера та один спеціальний символ (*, #, & тощо)!"
+},
+"newPassword": {
+"type": "string",
+"description": "Пароль має містити принаймні 6 символів та в його складі має бути принаймні одна літера та один спеціальний символ (*, #, & тощо)!"
+}
+},
+"required": [
+"oldPassword",
+"newPassword"
+]
+}
+}
+}
+}
