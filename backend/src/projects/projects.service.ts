@@ -14,12 +14,14 @@ import { UserGet } from 'src/interfaces/userGet';
 import { Price } from 'src/mongo/schemas/price.schema';
 import { ErrorsApp } from 'src/common/errors';
 import { AlowUserList } from 'src/interfaces/alow.user.list';
+import { User } from 'src/mongo/schemas/user/user.schema';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     @InjectModel(Price.name) private priceModel: Model<Price>,
+    @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
   async getAll(
@@ -304,10 +306,24 @@ export class ProjectsService {
     if (!currentProject) {
       throw new NotFoundException(ErrorsApp.NOT_PROJECT);
     }
-
+    this.deleteAlowUser(projectId);
     return await this.projectModel.findOneAndDelete({
       owner: typedUser._id,
       _id: projectId,
     });
+  }
+
+  async deleteAlowUser(@Param('projectId') projectId: Types.ObjectId) {
+    const users = await this.userModel.find();
+    for (let i = 0; i < users.length; i++) {
+      const newAlowList = users[i].projectIds.filter(
+        ({ id }) => id !== projectId.toString(),
+      );
+      await this.userModel.findByIdAndUpdate(
+        users[i]._id,
+        { $set: { projectIds: newAlowList } },
+        { new: true },
+      );
+    }
   }
 }
