@@ -13,12 +13,14 @@ import { MaterialDto } from './material.dto';
 import { ErrorsApp } from 'src/common/errors';
 import { Helpers } from '../positions/helpers';
 import { MessageApp } from 'src/common/message';
+import { SettingProjectService } from '../setting-project/setting.project.service';
 
 @Injectable()
 export class MaterialsService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private readonly positionsService: PositionsService,
+    private readonly settingService: SettingProjectService,
   ) {}
 
   async createMaterial(
@@ -59,6 +61,7 @@ export class MaterialsService {
     await this.getTotal(projectId);
 
     await this.positionsService.getResults(projectId);
+    await this.settingService.getResults(projectId);
     return { message: MessageApp.CREATE_MATERIALS(dto.title) };
   }
 
@@ -108,6 +111,7 @@ export class MaterialsService {
     await this.getTotal(projectId);
 
     await this.positionsService.getResults(projectId);
+    await this.settingService.getResults(projectId);
     return { message: MessageApp.UPDATE_MATERIAL(dto.title) };
   }
 
@@ -142,6 +146,7 @@ export class MaterialsService {
     await this.getTotal(projectId);
 
     await this.positionsService.getResults(projectId);
+    await this.settingService.getResults(projectId);
     return { message: MessageApp.DELETE_MATERIAL };
   }
 

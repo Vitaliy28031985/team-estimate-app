@@ -8,12 +8,14 @@ import { AdvanceDto } from './advance.dto';
 import { ErrorsApp } from 'src/common/errors';
 import { Helpers } from '../positions/helpers';
 import { MessageApp } from 'src/common/message';
+import { SettingProjectService } from '../setting-project/setting.project.service';
 
 @Injectable()
 export class AdvancesService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private readonly positionsService: PositionsService,
+    private readonly settingService: SettingProjectService,
   ) {}
   async createAdvances(
     dto: AdvanceDto,
@@ -46,6 +48,7 @@ export class AdvancesService {
 
     await this.getTotal(projectId);
     await this.positionsService.getResults(projectId);
+    await this.settingService.getResults(projectId);
     return { message: MessageApp.ADD_ADVANCE(dto.comment) };
   }
 
@@ -94,6 +97,7 @@ export class AdvancesService {
 
     await this.getTotal(projectId);
     await this.positionsService.getResults(projectId);
+    await this.settingService.getResults(projectId);
     return { message: MessageApp.UPDATE_ADVANCE(dto.comment) };
   }
 
@@ -128,6 +132,7 @@ export class AdvancesService {
     );
     await this.getTotal(projectId);
     await this.positionsService.getResults(projectId);
+    await this.settingService.getResults(projectId);
     return { message: MessageApp.DELETE_ADVANCE };
   }
 
