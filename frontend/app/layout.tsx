@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./scss/globals.scss";
 
 import { Inter, } from "next/font/google";
+import { Providers } from "./providers";
 
 
 const inter = Inter({
@@ -21,9 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="uk">      
+    <html lang="uk">
       <body className={`${inter.className}`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
