@@ -4,11 +4,13 @@ import {
   Get,
   Param,
   Post,
+  Redirect,
   Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { config } from 'dotenv';
 import { AuthService } from './auth.service';
 import { User } from 'src/mongo/schemas/user/user.schema';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
@@ -17,6 +19,8 @@ import { AuthLoginDto } from './auth-dto/auth.login.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UserUpdateEmailDto } from 'src/user/dtos/user.update.email.dto';
 import { VerifyCodeDto } from './auth-dto/verify.code.dto';
+config();
+const { CORS_LINK } = process.env;
 
 @Controller('auth')
 export class AuthController {
@@ -30,6 +34,7 @@ export class AuthController {
   }
 
   @Get('/verify/:verificationToken')
+  @Redirect(CORS_LINK, 302)
   async verifyUser(
     @Param('verificationToken')
     verificationToken: string,

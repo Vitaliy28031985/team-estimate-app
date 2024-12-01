@@ -64,10 +64,22 @@ export class AuthService {
     if (!user) {
       throw new ConflictException(ErrorsApp.EMPTY_USER);
     }
-    return this.userModel.findByIdAndUpdate(user._id, {
+    await this.userModel.findByIdAndUpdate(user._id, {
       verify: true,
       verificationToken: null,
     });
+
+    const payload = { id: user._id };
+    const token = jwt.sign(payload, this.secretKey, { expiresIn: '24h' });
+    const refreshToken = jwt.sign(payload, this.secretKey, {
+      expiresIn: '7d',
+    });
+
+    await this.userModel.findByIdAndUpdate(user._id, {
+      $set: { token, refreshToken },
+    });
+
+    return { token, refreshToken };
   }
 
   async validateOAuthLogin(
