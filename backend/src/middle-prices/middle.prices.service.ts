@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Param } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { MiddlePrice } from 'src/mongo/schemas/middle-prices/middle.prices';
 import { PricesDto } from 'src/prices/price.dto';
 import { Helpers } from 'src/projects/positions/helpers';
@@ -61,14 +61,48 @@ export class MiddlePricesService {
       );
     }
     const newMiddlePrices = await this.middlePriceModel.find();
+
     for (let i = 0; i < newMiddlePrices.length; i++) {
       const prices = newMiddlePrices[i].prices;
+      if (prices.length !== 0) {
+        await this.middlePriceModel.findByIdAndUpdate(
+          newMiddlePrices[i]._id,
+          { $set: { price: Helpers.middlePrice(prices) } },
+          { new: true },
+        );
+      }
+    }
+  }
 
+  async removeMiddlePrice(@Param('priceId') priceId: Types.ObjectId) {
+    const middlePrices = await this.middlePriceModel.find();
+    for (let i = 0; i < middlePrices.length; i++) {
+      const prices = middlePrices[i].prices.filter(
+        ({ id }) => id.toString() !== priceId.toString(),
+      );
       await this.middlePriceModel.findByIdAndUpdate(
-        newMiddlePrices[i]._id,
-        { $set: { price: Helpers.middlePrice(prices) } },
+        middlePrices[i]._id,
+        { $set: { prices } },
         { new: true },
       );
+    }
+    const newMiddlePrices = await this.middlePriceModel.find();
+    for (let i = 0; i < newMiddlePrices.length; i++) {
+      const prices = newMiddlePrices[i].prices;
+      if (prices.length === 0) {
+        await this.middlePriceModel.findByIdAndUpdate(
+          newMiddlePrices[i]._id,
+          { $set: { price: 0 } },
+          { new: true },
+        );
+      }
+      if (prices.length !== 0) {
+        await this.middlePriceModel.findByIdAndUpdate(
+          newMiddlePrices[i]._id,
+          { $set: { price: Helpers.middlePrice(prices) } },
+          { new: true },
+        );
+      }
     }
   }
 }

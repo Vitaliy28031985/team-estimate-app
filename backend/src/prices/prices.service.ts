@@ -89,10 +89,10 @@ export class PricesService {
     if (pricesList.length === 0) {
       throw new NotFoundException(ErrorsApp.NOT_PRICE);
     }
-    const targetPrice = pricesList.some(
+    const targetPrice = pricesList.filter(
       ({ id }) => id.toString() === String(priceId),
     );
-    if (!targetPrice) {
+    if (targetPrice.length === 0) {
       throw new NotFoundException(ErrorsApp.NOT_PRICE);
     }
     await this.middlePricesService.updateMiddlePrice({
@@ -102,7 +102,7 @@ export class PricesService {
     });
 
     return await this.priceModel.findByIdAndUpdate(
-      { owner: typedUser._id, _id: priceId },
+      { owner: typedUser._id, _id: targetPrice[0]._id },
       priceDto,
       { new: true, fields: ['-createdAt', '-updatedAt'] },
     );
@@ -125,16 +125,18 @@ export class PricesService {
     if (pricesList.length === 0) {
       throw new NotFoundException(ErrorsApp.NOT_PRICE);
     }
-    const targetPrice = pricesList.some(
-      ({ _id }) => _id.toString() === String(priceId),
+    const targetPrice = pricesList.filter(
+      ({ id }) => id.toString() === priceId.toString(),
     );
-    if (!targetPrice) {
+    if (targetPrice.length === 0) {
       throw new NotFoundException(ErrorsApp.NOT_PRICE);
     }
 
+    await this.middlePricesService.removeMiddlePrice(priceId);
+
     return this.priceModel.findOneAndDelete({
       owner: typedUser._id,
-      _id: priceId,
+      _id: targetPrice[0]._id,
     });
   }
 }
