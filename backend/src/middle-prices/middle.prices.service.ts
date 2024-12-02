@@ -44,4 +44,31 @@ export class MiddlePricesService {
       );
     }
   }
+
+  async updateMiddlePrice(dto: PricesDto) {
+    const middlePrices = await this.middlePriceModel.find();
+    for (let i = 0; i < middlePrices.length; i++) {
+      const prices = middlePrices[i].prices;
+      for (let i = 0; i < prices.length; i++) {
+        if (prices[i].id.toString() === dto.id.toString()) {
+          prices[i].price = dto.price;
+        }
+      }
+      await this.middlePriceModel.findByIdAndUpdate(
+        middlePrices[i]._id,
+        { $set: { prices } },
+        { new: true },
+      );
+    }
+    const newMiddlePrices = await this.middlePriceModel.find();
+    for (let i = 0; i < newMiddlePrices.length; i++) {
+      const prices = newMiddlePrices[i].prices;
+
+      await this.middlePriceModel.findByIdAndUpdate(
+        newMiddlePrices[i]._id,
+        { $set: { price: Helpers.middlePrice(prices) } },
+        { new: true },
+      );
+    }
+  }
 }

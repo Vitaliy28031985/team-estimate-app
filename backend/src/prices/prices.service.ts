@@ -90,11 +90,16 @@ export class PricesService {
       throw new NotFoundException(ErrorsApp.NOT_PRICE);
     }
     const targetPrice = pricesList.some(
-      ({ _id }) => _id.toString() === String(priceId),
+      ({ id }) => id.toString() === String(priceId),
     );
     if (!targetPrice) {
       throw new NotFoundException(ErrorsApp.NOT_PRICE);
     }
+    await this.middlePricesService.updateMiddlePrice({
+      ...priceDto,
+      id: priceId,
+      owner: typedUser._id,
+    });
 
     return await this.priceModel.findByIdAndUpdate(
       { owner: typedUser._id, _id: priceId },
