@@ -8,6 +8,10 @@ export class PricesDto {
   @Expose()
   id?: Types.ObjectId;
 
+  @IsOptional()
+  @Expose()
+  owner?: Types.ObjectId;
+
   @ApiProperty({
     type: String,
   })

@@ -12,10 +12,14 @@ import { Price } from 'src/mongo/schemas/price.schema';
 import { PricesDto } from './price.dto';
 import { RequestWithUser } from 'src/interfaces/requestWithUser';
 import { ErrorsApp } from 'src/common/errors';
+import { MiddlePricesService } from 'src/middle-prices/middle.prices.service';
 
 @Injectable()
 export class PricesService {
-  constructor(@InjectModel(Price.name) private priceModel: Model<Price>) {}
+  constructor(
+    @InjectModel(Price.name) private priceModel: Model<Price>,
+    private readonly middlePricesService: MiddlePricesService,
+  ) {}
 
   async findAll(@Req() req: RequestWithUser): Promise<Price[]> {
     const user = req.user;
@@ -52,7 +56,14 @@ export class PricesService {
     if (isExistPrice) {
       throw new ConflictException(ErrorsApp.EXIST_PRICE(priceDto.title));
     }
+
     const newPrice = await this.priceModel.create({
+      ...priceDto,
+      id: newPriceId,
+      owner: typedUser._id,
+    });
+
+    await this.middlePricesService.addMiddlePrice({
       ...priceDto,
       id: newPriceId,
       owner: typedUser._id,

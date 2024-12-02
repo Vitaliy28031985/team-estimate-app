@@ -38,4 +38,11 @@ export const Helpers = {
     const isValidObjectId = /^[a-f0-9]{24}$/.test(id);
     return isValidObjectId ? true : false;
   },
+  middlePrice(array: any): number {
+    const pricesLength = array.length;
+    const sum = array.reduce((prevPrice, priceItem) => {
+      return prevPrice + priceItem.price;
+    }, 0);
+    return sum / pricesLength;
+  },
 };
