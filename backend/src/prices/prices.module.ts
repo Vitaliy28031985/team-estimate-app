@@ -18,6 +18,6 @@ import { MiddlePricesService } from 'src/middle-prices/middle.prices.service';
   ],
   controllers: [PricesController],
   providers: [PricesService, MiddlePricesService],
-  exports: [PricesService],
+  // exports: [PricesService],
 })
 export class PricesModule {}
