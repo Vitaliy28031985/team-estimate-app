@@ -228,6 +228,7 @@ export class AuthService {
     await this.userModel.findByIdAndUpdate(user._id, {
       password: hashedPassword,
       verifyCode: null,
+      verify: true,
     });
 
     return { message: MessageApp.UPDATE_PASSWORD };

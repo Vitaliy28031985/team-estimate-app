@@ -1,22 +1,35 @@
-@use './normalise.scss';
-@use './variables.scss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// @use './normalise.scss';
+// @use './variables.scss';
+
+
 
 body {
-    background-color: var(--bg-color-main);
-    color: var(--txt-color-main);
+    // background-color: var(--bg-color-main);
+    // color: var(--txt-color-main);
 }
 
 
 .bg-two {
     width: 600px;
     height: 300px;
-    background: var(--bg-color-profile);
-    box-shadow: var(--shadow);
+    // background: var(--bg-color-profile);
+    // box-shadow: var(--shadow);
 }
 
-.pencil svg {
-    stroke: var(--txt-color-main);
-    &:hover {
-        stroke: var(--dark-color);
-    }
-}
+// .pencil svg {
+//     stroke: var(--txt-color-main);
+//     &:hover {
+//         stroke: var(--dark-color);
+//     }
+// // }
+//     .pencil {
+//     width: 24px;
+//     stroke: red;
+//     &:hover {
+//         stroke: blue;
+//     }
+//     }
