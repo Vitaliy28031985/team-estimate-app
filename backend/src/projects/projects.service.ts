@@ -53,6 +53,8 @@ export class ProjectsService {
       projectsOwns.map((item) => projectsIdArr.push(item));
     }
 
+    const amountPages: number = Math.ceil(projectsIdArr.length / limit);
+
     const skipCurrent = (page - 1) * limit;
 
     const endElement =
@@ -70,7 +72,7 @@ export class ProjectsService {
 
     const total = projects.length;
 
-    return { projects, total };
+    return { projects, total, amountPages };
   }
   async getById(
     @Param('projectId') projectId: Types.ObjectId,
